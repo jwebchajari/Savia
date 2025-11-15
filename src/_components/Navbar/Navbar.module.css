@@ -1,0 +1,49 @@
+.navbarShadow {
+    border-bottom: 1px solid #eee;
+    padding: 0.6rem 0;
+}
+
+/* LOGO */
+.logo {
+    height: auto;
+    width: auto;
+    max-height: 40px;
+}
+
+@media (min-width: 768px) {
+    .logo {
+        max-height: 48px;
+    }
+}
+
+/* CARRITO FRESCO */
+.cartWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cartIcon {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.cartWrapper:hover .cartIcon {
+    transform: scale(1.1);
+}
+
+/* BADGE */
+.cartBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--savia-main);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    font-weight: 600;
+}

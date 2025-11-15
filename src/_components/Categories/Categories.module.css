@@ -1,0 +1,86 @@
+.title {
+    font-family: "Avigea", serif;
+    font-size: 2.2rem;
+    /* más grande */
+    color: var(--savia-dark);
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    /* más peso */
+}
+
+/* Barra de búsqueda */
+.search {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-family: "Gotham", sans-serif;
+    font-size: 0.95rem;
+}
+
+/* Wrapper especial para centrar el swiper */
+.swiperWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Swiper general */
+.swiper {
+    padding-bottom: 15px;
+    max-width: 900px;
+    /* clave para centrar */
+}
+
+/* Slide */
+.slide {
+    width: auto !important;
+}
+
+/* ---------- ICONOS ---------- */
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+.circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--savia-main);
+    background: #f5f5f5;
+    position: relative;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.item:hover .circle {
+    transform: scale(1.07);
+}
+
+.image {
+    object-fit: cover;
+}
+
+.name {
+    font-family: "Gotham", sans-serif;
+    color: #333;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .circle {
+        width: 110px;
+        height: 110px;
+    }
+
+    .name {
+        font-size: 1rem;
+    }
+}
