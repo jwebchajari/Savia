@@ -1,44 +1,31 @@
 .title {
     font-family: "Avigea", serif;
-    font-size: 2.2rem;
-    /* más grande */
-    color: var(--savia-dark);
-    margin-bottom: 1.2rem;
+    font-size: 2.4rem;
     font-weight: 600;
-    /* más peso */
+    color: var(--savia-dark);
+    margin-bottom: 1.5rem;
 }
 
-/* Barra de búsqueda */
+/* Searchbar */
 .search {
     width: 100%;
-    padding: 0.7rem 1rem;
+    padding: .75rem 1rem;
     border: 2px solid #ddd;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-    font-family: "Gotham", sans-serif;
-    font-size: 0.95rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: .95rem;
 }
 
-/* Wrapper especial para centrar el swiper */
-.swiperWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-/* Swiper general */
+/* ---------- MOBILE (swiper) ---------- */
 .swiper {
-    padding-bottom: 15px;
-    max-width: 900px;
-    /* clave para centrar */
+    padding: .5rem 0 1rem;
 }
 
-/* Slide */
 .slide {
     width: auto !important;
 }
 
-/* ---------- ICONOS ---------- */
+/* ---------- ICS ---------- */
 .item {
     display: flex;
     flex-direction: column;
@@ -54,12 +41,7 @@
     border: 2px solid var(--savia-main);
     background: #f5f5f5;
     position: relative;
-    margin-bottom: 0.5rem;
-    transition: transform 0.2s ease;
-}
-
-.item:hover .circle {
-    transform: scale(1.07);
+    margin-bottom: .5rem;
 }
 
 .image {
@@ -67,13 +49,24 @@
 }
 
 .name {
+    font-size: .9rem;
     font-family: "Gotham", sans-serif;
     color: #333;
-    font-size: 0.85rem;
     text-align: center;
 }
 
-/* Desktop */
+/* ---------- DESKTOP GRID ---------- */
+.desktopGrid {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+.desktopItem {
+    width: 120px;
+}
+
 @media (min-width: 992px) {
     .circle {
         width: 110px;

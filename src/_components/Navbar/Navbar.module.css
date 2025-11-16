@@ -47,3 +47,39 @@
     padding: 2px 6px;
     font-weight: 600;
 }
+
+.navbarShadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.logo {
+    object-fit: contain;
+}
+
+/* Carrito wrapper */
+.cartWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cartIcon {
+    cursor: pointer;
+}
+
+/* Badge que muestra cantidad */
+.cartBadge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #c92a2a;
+    /* rojo oferta */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.1;
+}

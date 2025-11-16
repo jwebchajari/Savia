@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-
 import "swiper/css";
-import "swiper/css/navigation";
 
 import styles from "./Categories.module.css";
 
@@ -25,17 +22,25 @@ const categories = [
 
 export default function CategoriesCarousel() {
     const [query, setQuery] = useState("");
+    const [isMobile, setIsMobile] = useState(false);
 
-    const filtered = categories.filter((cat) =>
-        cat.name.toLowerCase().includes(query.toLowerCase())
+    const filtered = categories.filter((c) =>
+        c.name.toLowerCase().includes(query.toLowerCase())
     );
+
+    // Detectar pantalla
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 992);
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <section className="container mt-4 mb-4">
-
             <h2 className={styles.title}>Categorías</h2>
 
-            {/* Barra de búsqueda */}
+            {/* SEARCH */}
             <input
                 type="text"
                 placeholder="Buscar categoría..."
@@ -44,38 +49,38 @@ export default function CategoriesCarousel() {
                 onChange={(e) => setQuery(e.target.value)}
             />
 
-            {/* Swiper Carrusel */}
-            <div className={styles.swiperWrapper}>
-                <Swiper
-                    spaceBetween={20}
-                    slidesPerView="auto"
-                    navigation
-                    modules={[Navigation]}
-                    centeredSlides={false}
-                    breakpoints={{
-                        992: {
-                            centeredSlides: true,
-                        },
-                    }}
-                    className={styles.swiper}
-                >
+            {/* MOBILE → SWIPER */}
+            {isMobile && (
+                <Swiper slidesPerView="auto" spaceBetween={20} className={styles.swiper}>
                     {filtered.map((cat) => (
                         <SwiperSlide key={cat.slug} className={styles.slide}>
-                            <Link href={`/categoria/${cat.slug}`} className={styles.item}>
-                                <div className={styles.circle}>
-                                    <Image
-                                        src={cat.img}
-                                        alt={cat.name}
-                                        fill
-                                        className={styles.image}
-                                    />
-                                </div>
-                                <span className={styles.name}>{cat.name}</span>
-                            </Link>
+                            <CategoryItem {...cat} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
-            </div>
+            )}
+
+            {/* DESKTOP → CENTRADO */}
+            {!isMobile && (
+                <div className={styles.desktopGrid}>
+                    {filtered.map((cat) => (
+                        <div key={cat.slug} className={styles.desktopItem}>
+                            <CategoryItem {...cat} />
+                        </div>
+                    ))}
+                </div>
+            )}
         </section>
+    );
+}
+
+function CategoryItem({ name, slug, img }) {
+    return (
+        <Link href={`/categoria/${slug}`} className={styles.item}>
+            <div className={styles.circle}>
+                <Image src={img} alt={name} fill className={styles.image} />
+            </div>
+            <span className={styles.name}>{name}</span>
+        </Link>
     );
 }

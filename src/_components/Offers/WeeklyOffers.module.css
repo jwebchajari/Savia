@@ -1,0 +1,170 @@
+.title {
+    font-family: "Avigea", serif;
+    font-size: 2rem;
+    color: var(--savia-dark);
+    margin-bottom: 1.2rem;
+    margin-top: 2em;
+    font-weight: 800;
+    text-align: center;
+}
+
+.swiper {
+    padding-bottom: 5px;
+}
+
+.slide {
+    width: 260px !important;
+}
+
+/*************** CARD ***************/
+.card {
+    background: #fff;
+    border: 2px solid var(--savia-main);
+    border-radius: 16px;
+    padding: 1.3rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 380px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.12);
+}
+
+/*************** BADGE (NO TOCAR) ***************/
+.badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #c92a2a;
+    color: white;
+    padding: 8px 18px;
+    font-weight: bold;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 12px;
+    font-size: 1rem;
+    transform: translateY(-50%);
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
+    margin-top: 1.2em;
+}
+
+/*************** ICON WRAPPER PREMIUM ***************/
+.iconWrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #e8f3ee 0%, #d5eadf 45%, #c4e2d6 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    border: 2px solid var(--savia-main);
+    transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+
+/* Hover solo en desktop */
+@media (hover: hover) {
+    .iconWrapper:hover {
+        transform: scale(1.06);
+        box-shadow: 0px 6px 14px rgba(0,0,0,0.25);
+    }
+}
+
+/*************** ICON SVG ***************/
+.iconSvg {
+    width: 40px;
+    height: 40px;
+    stroke: var(--savia-dark);
+    color: var(--savia-dark);
+    opacity: 0.9;
+}
+
+/*************** TEXT ***************/
+.name {
+    font-family: "Gotham", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: .3rem;
+    text-align: center;
+}
+
+.priceKg {
+    font-size: .9rem;
+    opacity: .7;
+    margin-bottom: 1rem;
+}
+
+/*************** GRAM CONTROLS ***************/
+.gramControls {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.gramBtn {
+    background: var(--savia-main);
+    color: #fff;
+    border: none;
+    padding: .45rem .7rem;
+    border-radius: 8px;
+    font-size: .8rem;
+    cursor: pointer;
+    font-family: "Gotham", sans-serif;
+    transition: background .15s ease-out;
+}
+
+.gramBtn:hover {
+    background: #064c2c;
+}
+
+.input {
+    width: 90px;
+    padding: .6rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    font-size: .95rem;
+    font-family: "Gotham", sans-serif;
+}
+
+/*************** PRICE ***************/
+.finalPrice {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--savia-main);
+    margin-bottom: 1rem;
+}
+
+.xgrams {
+    font-size: .9rem;
+    opacity: .7;
+}
+
+/*************** BUTTON ***************/
+.btn {
+    width: 100%;
+    padding: .8rem;
+    background: var(--savia-main);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: "Gotham", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease-out;
+}
+
+.btn:hover {
+    background: #064c2c;
+}
+
+.btnDisabled {
+    background: #c5c5c5 !important;
+    cursor: not-allowed !important;
+}
+
+.btnDisabled:hover {
+    background: #c5c5c5 !important;
+}

@@ -7,12 +7,14 @@ export default function Banner() {
             <div className={styles.bannerOverlay}></div>
 
             <Image
-                src="/banner-grandes.png"  
+                src="/banner-chat.png"
                 alt="Banner Savia"
                 fill
                 priority
+                unoptimized
                 className={styles.bannerImg}
             />
+
         </section>
     );
 }

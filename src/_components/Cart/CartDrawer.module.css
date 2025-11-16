@@ -1,0 +1,238 @@
+/* ================================
+   OVERLAY OSCURO
+================================ */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.25s ease;
+    z-index: 2000;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ================================
+   DRAWER
+================================ */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: right .35s ease;
+
+    width: 85%;
+    max-width: 380px;
+    padding: 1em;
+}
+
+.drawerOpen {
+    right: 0;
+}
+
+/* DESKTOP */
+@media (min-width: 992px) {
+    .drawer {
+        width: 420px;
+        max-width: 420px;
+        padding: 1rem 1.4rem;
+    }
+}
+
+/* ================================
+   AREA SCROLLABLE
+================================ */
+.contentScroll {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* ================================
+   HEADER
+================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.header h3 {
+    font-size: 1.55rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+/* ================================
+   PRODUCTOS
+================================ */
+.items {
+    padding-top: .8rem;
+}
+
+.empty {
+    margin-top: 2rem;
+    text-align: center;
+    color: #777;
+}
+
+.itemCard {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.controls button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--savia-main);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.removeBtn {
+    background: none;
+    border: none;
+    color: #c92a2a;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* ================================
+   MÉTODO DE ENTREGA
+================================ */
+.deliveryBox {
+    margin-top: 1rem;
+}
+
+.deliveryTitle {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 1.05rem;
+}
+
+.deliveryOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.option input {
+    width: 18px;
+    height: 18px;
+}
+
+/* ================================
+   FORMULARIO ENVÍO
+================================ */
+.formBox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 1rem 0;
+}
+
+.formBox input,
+.formBox textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-size: .95rem;
+}
+
+/* ================================
+   MAPA
+================================ */
+.mapBox {
+    margin-bottom: 1rem;
+}
+
+.localLabel {
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+}
+
+.localAddress {
+    font-size: .9rem;
+    margin-bottom: .5rem;
+}
+
+.map {
+    width: 100%;
+    height: 170px;
+    border: none;
+    border-radius: 8px;
+}
+
+/* ================================
+   FOOTER
+================================ */
+.footer {
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.checkoutBtn {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--savia-main);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+}
+
+.checkoutBtn:hover {
+    background: #064f2d;
+}
