@@ -1,140 +1,126 @@
 {
-  "name": "Savia Design Tokens",
-  "version": "1.0.0",
-  "colors": {
-    "brand": {
-      "deep": "#1F402C",
-      "primary": "#1C714C",
-      "accent": "#7DA51C"
-    },
-    "neutral": {
-      "black": "#0A0A0A",
-      "ink": "#1B1B1B",
-      "muted": "#6B7280",
-      "line": "#E5E7EB",
-      "bg": "#FFFFFF",
-      "bgAlt": "#F8FAF9"
-    },
-    "state": {
-      "success": "{colors.brand.primary}",
-      "warning": "#E8A100",
-      "danger": "#CC3A3A",
-      "focus": "{colors.brand.primary}"
-    }
-  },
-  "typography": {
-    "fonts": {
-      "display": [
-        "Avigea",
-        "Lora",
-        "Merriweather",
-        "serif"
-      ],
-      "sans": [
-        "Gotham",
-        "Montserrat",
-        "Inter",
-        "SF Pro Text",
-        "Segoe UI",
-        "Roboto",
-        "Arial",
-        "sans-serif"
-      ]
-    },
-    "scale": {
-      "step--2": "clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem)",
-      "step--1": "clamp(0.88rem, 0.83rem + 0.20vw, 0.98rem)",
-      "step-0": "clamp(1.00rem, 0.95rem + 0.30vw, 1.10rem)",
-      "step-1": "clamp(1.25rem, 1.10rem + 0.60vw, 1.50rem)",
-      "step-2": "clamp(1.56rem, 1.30rem + 1.10vw, 2.00rem)",
-      "step-3": "clamp(1.95rem, 1.45rem + 1.90vw, 2.60rem)",
-      "step-4": "clamp(2.44rem, 1.60rem + 3.00vw, 3.40rem)"
-    }
-  },
-  "spacing": {
-    "fixed": {
-      "1": "0.25rem",
-      "2": "0.5rem",
-      "3": "0.75rem",
-      "4": "1rem",
-      "5": "1.5rem",
-      "6": "2rem"
-    },
-    "fluid": {
-      "xs": "clamp(0.5rem, 0.35rem + 0.7vw, 0.75rem)",
-      "sm": "clamp(0.75rem, 0.5rem + 0.8vw, 1rem)",
-      "md": "clamp(1rem, 0.7rem + 1vw, 1.5rem)",
-      "lg": "clamp(1.5rem, 1.1rem + 1.2vw, 2rem)",
-      "xl": "clamp(2rem, 1.5rem + 1.6vw, 3rem)"
-    }
-  },
-  "radii": {
-    "default": "14px"
-  },
-  "shadows": {
-    "sm": "0 1px 2px rgba(0,0,0,.06)",
-    "md": "0 6px 18px rgba(0,0,0,.08)",
-    "lg": "0 12px 30px rgba(0,0,0,.12)"
-  },
-  "breakpoints": {
-    "xs": {
-      "min": 0,
-      "max": 479
-    },
-    "sm": {
-      "min": 480,
-      "max": 767
-    },
-    "md": {
-      "min": 768,
-      "max": 991
-    },
-    "lg": {
-      "min": 992,
-      "max": 1199
-    },
-    "xl": {
-      "min": 1200,
-      "max": 1439
-    },
-    "xxl": {
-      "min": 1440,
-      "max": 9999
-    }
-  },
-  "containers": {
-    "default": "min(1200px, 92vw)",
-    "sm": "min(600px, 92vw)",
-    "md": "min(720px, 90vw)",
-    "lg": "min(960px, 88vw)",
-    "xl": "min(1140px, 86vw)",
-    "xxl": "min(1280px, 84vw)"
-  },
-  "bootstrap": {
-    "map": {
-      "--bs-primary": "{colors.brand.primary}",
-      "--bs-success": "{colors.state.success}",
-      "--bs-warning": "{colors.state.warning}",
-      "--bs-danger": "{colors.state.danger}",
-      "--bs-body-color": "{colors.neutral.ink}",
-      "--bs-body-bg": "{colors.neutral.bg}",
-      "--bs-border-color": "{colors.neutral.line}",
-      "--bs-link-color": "{colors.brand.primary}",
-      "--bs-border-radius": "{radii.default}"
-    },
-    "notes": "Para match 100% con breakpoints de BS, cambia sm\u2192576 y xxl\u21921400."
-  },
-  "components": {
-    "button": {
-      "primary": {
-        "bg": "{colors.brand.primary}",
-        "text": "#FFFFFF",
-        "border": "color-mix(in srgb, {colors.brand.primary}, #000 15%)"
-      }
-    },
-    "productCard": {
-      "titleFont": "{typography.fonts.display}",
-      "titleSize": "{typography.scale.step-1}"
-    }
-  }
+	"name": "Savia Design Tokens",
+	"version": "1.0.0",
+
+	"colors": {
+		"brand": {
+			"deep": "#1F402C",
+			"primary": "#1C714C",
+			"accent": "#7DA51C"
+		},
+		"neutral": {
+			"black": "#0A0A0A",
+			"ink": "#1B1B1B",
+			"muted": "#6B7280",
+			"line": "#E5E7EB",
+			"bg": "#FFFFFF",
+			"bgAlt": "#F8FAF9"
+		},
+		"state": {
+			"success": "{colors.brand.primary}",
+			"warning": "#E8A100",
+			"danger": "#CC3A3A",
+			"focus": "{colors.brand.primary}"
+		}
+	},
+
+	"typography": {
+		"fonts": {
+			"display": ["Avigea", "Lora", "Merriweather", "serif"],
+			"sans": [
+				"Gotham",
+				"Montserrat",
+				"Inter",
+				"SF Pro Text",
+				"Segoe UI",
+				"Roboto",
+				"Arial",
+				"sans-serif"
+			]
+		},
+		"scale": {
+			"step--2": "clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem)",
+			"step--1": "clamp(0.88rem, 0.83rem + 0.20vw, 0.98rem)",
+			"step-0": "clamp(1.00rem, 0.95rem + 0.30vw, 1.10rem)",
+			"step-1": "clamp(1.25rem, 1.10rem + 0.60vw, 1.50rem)",
+			"step-2": "clamp(1.56rem, 1.30rem + 1.10vw, 2.00rem)",
+			"step-3": "clamp(1.95rem, 1.45rem + 1.90vw, 2.60rem)",
+			"step-4": "clamp(2.44rem, 1.60rem + 3.00vw, 3.40rem)"
+		}
+	},
+
+	"spacing": {
+		"fixed": {
+			"1": "0.25rem",
+			"2": "0.5rem",
+			"3": "0.75rem",
+			"4": "1rem",
+			"5": "1.5rem",
+			"6": "2rem"
+		},
+		"fluid": {
+			"xs": "clamp(0.5rem, 0.35rem + 0.7vw, 0.75rem)",
+			"sm": "clamp(0.75rem, 0.5rem + 0.8vw, 1rem)",
+			"md": "clamp(1rem, 0.7rem + 1vw, 1.5rem)",
+			"lg": "clamp(1.5rem, 1.1rem + 1.2vw, 2rem)",
+			"xl": "clamp(2rem, 1.5rem + 1.6vw, 3rem)"
+		}
+	},
+
+	"radii": {
+		"default": "14px"
+	},
+
+	"shadows": {
+		"sm": "0 1px 2px rgba(0,0,0,.06)",
+		"md": "0 6px 18px rgba(0,0,0,.08)",
+		"lg": "0 12px 30px rgba(0,0,0,.12)"
+	},
+
+	"breakpoints": {
+		"xs": { "min": 0, "max": 479 },
+		"sm": { "min": 480, "max": 767 },
+		"md": { "min": 768, "max": 991 },
+		"lg": { "min": 992, "max": 1199 },
+		"xl": { "min": 1200, "max": 1439 },
+		"xxl": { "min": 1440, "max": 9999 }
+	},
+
+	"containers": {
+		"default": "min(1200px, 92vw)",
+		"sm": "min(600px, 92vw)",
+		"md": "min(720px, 90vw)",
+		"lg": "min(960px, 88vw)",
+		"xl": "min(1140px, 86vw)",
+		"xxl": "min(1280px, 84vw)"
+	},
+
+	"bootstrap": {
+		"map": {
+			"--bs-primary": "{colors.brand.primary}",
+			"--bs-success": "{colors.state.success}",
+			"--bs-warning": "{colors.state.warning}",
+			"--bs-danger": "{colors.state.danger}",
+			"--bs-body-color": "{colors.neutral.ink}",
+			"--bs-body-bg": "{colors.neutral.bg}",
+			"--bs-border-color": "{colors.neutral.line}",
+			"--bs-link-color": "{colors.brand.primary}",
+			"--bs-border-radius": "{radii.default}"
+		},
+		"notes": "Para matchear 100% con los breakpoints de Bootstrap, ajusta sm → 576 y xxl → 1400."
+	},
+
+	"components": {
+		"button": {
+			"primary": {
+				"bg": "{colors.brand.primary}",
+				"text": "#FFFFFF",
+				"border": "color-mix(in srgb, {colors.brand.primary}, #000 15%)"
+			}
+		},
+		"productCard": {
+			"titleFont": "{typography.fonts.display}",
+			"titleSize": "{typography.scale.step-1}"
+		}
+	}
 }

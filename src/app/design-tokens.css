@@ -1,0 +1,43 @@
+:root {
+    /* Brand */
+    --savia-deep: #1F402C;
+    --savia-main: #1C714C;
+    --savia-accent: #7DA51C;
+
+    /* Neutral */
+    --neutral-black: #0A0A0A;
+    --neutral-ink: #1B1B1B;
+    --neutral-muted: #6B7280;
+    --neutral-line: #E5E7EB;
+    --neutral-bg: #FFFFFF;
+    --neutral-bg-alt: #F8FAF9;
+
+    /* State */
+    --state-success: var(--savia-main);
+    --state-warning: #E8A100;
+    --state-danger: #CC3A3A;
+    --state-focus: var(--savia-main);
+
+    /* Radii */
+    --radius-default: 14px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, .08);
+    --shadow-lg: 0 12px 30px rgba(0, 0, 0, .12);
+
+    /* Typography */
+    --font-display: "Avigea", "Lora", "Merriweather", serif;
+    --font-base: "Gotham", "Montserrat", "Inter", sans-serif;
+
+    /* Bootstrap overrides */
+    --bs-primary: var(--savia-main);
+    --bs-success: var(--savia-main);
+    --bs-warning: var(--state-warning);
+    --bs-danger: var(--state-danger);
+    --bs-body-color: var(--neutral-ink);
+    --bs-body-bg: var(--neutral-bg);
+    --bs-border-color: var(--neutral-line);
+    --bs-border-radius: var(--radius-default);
+    --bs-link-color: var(--savia-main);
+}
