@@ -1,6 +1,6 @@
 // middleware.js
 import { NextResponse } from "next/server";
-import { verifySession } from "@/lib/auth";
+import { verifySession } from "../src/_components/lib/auth";
 
 export async function middleware(req) {
 	const token = req.cookies.get("adm_auth")?.value;

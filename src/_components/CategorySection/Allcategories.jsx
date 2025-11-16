@@ -46,13 +46,6 @@ const categories = [
         img: "/category-banners/yuyitos.webp",
         link: "/yuyitos",
     },
-    {
-        title: "Ofertas",
-        description:
-            "Productos seleccionados con descuentos exclusivos para aprovechar cada semana.",
-        img: "/category-banners/ofertas.png",
-        link: "/ofertas",
-    },
 ];
 
 export default function Allcategories() {
