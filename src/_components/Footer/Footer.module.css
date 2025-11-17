@@ -1,0 +1,146 @@
+.footer {
+    background: var(--savia-deep);
+    color: white;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+}
+
+.grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+}
+
+/* DESKTOP */
+@media (min-width: 992px) {
+    .grid {
+        grid-template-columns: 1.2fr 1fr 1fr;
+    }
+}
+
+/* -------- BRAND BLOCK -------- */
+.brandBlock {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: row;
+    justify-content: flex-end;
+    text-align: left;
+}
+
+.brandText {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    line-height: 1.35;
+    max-width: 220px;
+}
+
+/* Desktop: estilo original */
+@media (min-width: 992px) {
+    .brandBlock {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+/* BLOQUES EN MOBILE: CENTRADOS */
+.block {
+    text-align: center;
+}
+
+@media (min-width: 992px) {
+    .block {
+        text-align: left;
+    }
+}
+
+/* LOGO */
+.logo {
+    margin-bottom: 0.5rem;
+}
+
+/* LISTAS */
+.list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.list li {
+    margin-bottom: 0.4rem;
+}
+
+/* TEXTOS */
+.title {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+.link {
+    color: white;
+    opacity: 0.9;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* FILAS DE INFO */
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    justify-content: center;
+}
+
+@media (min-width: 992px) {
+    .row {
+        justify-content: flex-start;
+    }
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+    opacity: 0.85;
+}
+
+/* DIVISOR */
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 1.8rem 0;
+}
+
+/* COPYRIGHT */
+.copy {
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* CRÉDITO PERSONAL */
+.credit {
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: -0.4rem;
+}
+
+.creditLink {
+    color: var(--savia-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.creditLink:hover {
+    text-decoration: underline;
+}
