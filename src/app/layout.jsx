@@ -4,6 +4,7 @@ import "./globals.css";
 import "./design-tokens.css";
 import BootstrapClient from "@/_components/Boostrap/BootstrapClient";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "Savia - Almacén Natural",
@@ -19,10 +20,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className="font-base" suppressHydrationWarning>
-        <CartProvider>
-          <BootstrapClient />
-          {children}
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <BootstrapClient />
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

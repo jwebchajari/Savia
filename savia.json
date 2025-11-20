@@ -1,0 +1,47 @@
+{
+    "brand": {
+        "colors": {
+            "deep": "#1F402C",
+            "primary": "#1C714C",
+            "accent": "#7DA51C"
+        },
+        "fonts": {
+            "titles": "Avigea",
+            "body": "Gotham"
+        },
+        "favicon": "/favicon.ico"
+    },
+    "components": {
+        "navbar": "Con logo y carrito (sidebar)",
+        "banner": "Imagen 16:9, cover, mobile-first",
+        "categoriesCarousel": "Swiper, íconos redondos",
+        "weeklyOffers": "Cálculo por gramos + descuentos",
+        "categorySections": "Imagen real + descripción",
+        "footer": "3 columnas, contacto, crédito"
+    },
+    "pages": {
+        "categoria": "/categoria/[slug]",
+        "producto": "/producto/[slug]"
+    },
+    "dataModels": {
+        "product": {
+            "name": "",
+            "slug": "",
+            "priceKg": 0,
+            "category": "",
+            "offer": false,
+            "discount": 0,
+            "img": ""
+        },
+        "category": {
+            "title": "",
+            "slug": "",
+            "banner": "",
+            "description": ""
+        }
+    },
+    "firebaseStructure": {
+        "products": {},
+        "categories": {}
+    }
+}
