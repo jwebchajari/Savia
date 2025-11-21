@@ -6,6 +6,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/_components/Navbar/Navbar";
+import { setPersistence, browserLocalPersistence } from "firebase/auth";
+import Footer from "@/_components/Footer/Footer";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -15,7 +17,7 @@ export default function LoginPage() {
     const [pass, setPass] = useState("");
     const [error, setError] = useState("");
 
-    // 🔥 REDIRECT DEFINITIVO (espera loading)
+    // Redirección si ya está logueado
     useEffect(() => {
         if (!loading && user && isAdmin) {
             router.replace("/root");
@@ -27,20 +29,23 @@ export default function LoginPage() {
         setError("");
 
         try {
-            await signInWithEmailAndPassword(auth, email, pass);
+            await setPersistence(auth, browserLocalPersistence);
+            await signInWithEmailAndPassword(auth, email.trim(), pass);
+
+            // Guardar timestamp de login
+            localStorage.setItem("loginTime", Date.now());
         } catch (err) {
             console.error(err);
             setError("Credenciales incorrectas.");
         }
     };
 
-    // Mientras carga AuthContext, no muestres nada
     if (loading) return null;
 
     return (
         <>
             <Navbar />
-            <main className="container py-5">
+            <main className="container mt-5 py-5">
                 <div className="row justify-content-center">
                     <div className="col-12 col-md-6 col-lg-4">
                         <h1 className="mb-4 text-center">Acceso Root</h1>
@@ -77,6 +82,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </main>
+            <Footer/>
         </>
     );
 }

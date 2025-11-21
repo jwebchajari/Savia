@@ -1,90 +1,100 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import styles from "./WeeklyOffers.module.css";
 import { useCart } from "@/context/CartContext";
+import { getWeeklyOffers } from "@/services/productsService";
 
-// ICONOS MINIMALISTAS
-import { Leaf, Cookie, Nut } from "lucide-react";
-
-const offers = [
-    {
-        name: "Almendras",
-        slug: "almendras",
-        priceKg: 5000,
-        discount: 20,
-        icon: <Nut strokeWidth={1.8} className={styles.iconSvg} />
-    },
-    {
-        name: "Granola Mix",
-        slug: "granola-mix",
-        priceKg: 4200,
-        discount: 15,
-        icon: <Cookie strokeWidth={1.8} className={styles.iconSvg} />
-    },
-    {
-        name: "Yerba orgánica",
-        slug: "yerba-organica",
-        priceKg: 3600,
-        discount: 10,
-        icon: <Leaf strokeWidth={1.8} className={styles.iconSvg} />
-    }
-];
+const GENERIC_IMG = "/placeholder-product.png"; // Poner esta imagen en /public
 
 export default function WeeklyOffers() {
     const { addToCart } = useCart();
-    const [grams, setGrams] = useState({});
 
-    const handleGramChange = (slug, value) => {
+    const [products, setProducts] = useState([]);
+    const [grams, setGrams] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchOffers = async () => {
+            const data = await getWeeklyOffers();
+            setProducts(data);
+            setLoading(false);
+        };
+        fetchOffers();
+    }, []);
+
+    const handleGramChange = (id, value) => {
         const number = Math.max(0, Number(value));
-        setGrams(prev => ({ ...prev, [slug]: number }));
+        setGrams(prev => ({ ...prev, [id]: number }));
     };
 
-    const adjustGrams = (slug, change) => {
+    const adjustGrams = (id, change) => {
         setGrams(prev => {
-            const current = prev[slug] || 100;
+            const current = prev[id] || 100;
             const newValue = Math.max(0, current + change);
-            return { ...prev, [slug]: newValue };
+            return { ...prev, [id]: newValue };
         });
     };
 
-    const getFinalPrice = (priceKg, discount, grams) => {
-        if (grams <= 0) return 0;
-        const pricePerGram = priceKg / 1000;
-        const rawPrice = pricePerGram * grams;
-        return Math.round(rawPrice - rawPrice * (discount / 100));
+    const getFinalPrice = (producto, grams) => {
+        if (!grams || grams <= 0) return 0;
+
+        const priceOriginal = producto.precio;
+        const priceOferta = producto.precioOferta ?? producto.precio;
+
+        const pricePerGram = priceOferta / 1000;
+        return Math.round(pricePerGram * grams);
     };
+
+    if (loading) return null;
+    if (products.length === 0) return null;
 
     return (
         <section className="container mt-4 mb-4">
             <h2 className={styles.title}> Ofertas Semanales</h2>
 
             <Swiper spaceBetween={16} slidesPerView="auto" className={styles.swiper}>
-                {offers.map((item, i) => {
-                    const g = grams[item.slug] ?? 100;
-                    const finalPrice = getFinalPrice(item.priceKg, item.discount, g);
+                {products.map((item) => {
+                    const g = grams[item.id] ?? 100;
+                    const finalPrice = getFinalPrice(item, g);
+
+                    // Cálculo descuento real según precios
+                    const discount = item.precioOferta
+                        ? Math.round(((item.precio - item.precioOferta) / item.precio) * 100)
+                        : 0;
+
                     const disabled = g === 0 || finalPrice === 0;
 
                     return (
-                        <SwiperSlide key={i} className={styles.slide}>
+                        <SwiperSlide key={item.id} className={styles.slide}>
                             <div className={styles.card}>
 
-                                <span className={styles.badge}>-{item.discount}%</span>
+                                {/* Badge de descuento */}
+                                {discount > 0 && (
+                                    <span className={styles.badge}>-{discount}%</span>
+                                )}
 
-                                <div className={styles.iconWrapper}>
-                                    {item.icon}
+                                {/* Imagen */}
+                                <div className={styles.imageWrapper}>
+                                    <img
+                                        src={item.imagen || GENERIC_IMG}
+                                        alt={item.nombre}
+                                        className={styles.productImg}
+                                    />
                                 </div>
 
-                                <h3 className={styles.name}>{item.name}</h3>
+                                <h3 className={styles.name}>{item.nombre}</h3>
 
-                                <p className={styles.priceKg}>${item.priceKg} / Kg</p>
+                                <p className={styles.priceKg}>
+                                    ${item.precioOferta ?? item.precio} / Kg
+                                </p>
 
                                 <div className={styles.gramControls}>
                                     <button
                                         className={styles.gramBtn}
-                                        onClick={() => adjustGrams(item.slug, -50)}
+                                        onClick={() => adjustGrams(item.id, -50)}
                                     >
                                         -50g
                                     </button>
@@ -95,12 +105,12 @@ export default function WeeklyOffers() {
                                         step="50"
                                         className={styles.input}
                                         value={g}
-                                        onChange={(e) => handleGramChange(item.slug, e.target.value)}
+                                        onChange={(e) => handleGramChange(item.id, e.target.value)}
                                     />
 
                                     <button
                                         className={styles.gramBtn}
-                                        onClick={() => adjustGrams(item.slug, +50)}
+                                        onClick={() => adjustGrams(item.id, +50)}
                                     >
                                         +50g
                                     </button>
@@ -116,8 +126,8 @@ export default function WeeklyOffers() {
                                     disabled={disabled}
                                     onClick={() =>
                                         addToCart({
-                                            name: `${item.name} (${g}g)`,
-                                            slug: `${item.slug}-${g}`,
+                                            name: `${item.nombre} (${g}g)`,
+                                            slug: `${item.id}-${g}`,
                                             price: finalPrice,
                                             quantity: 1
                                         })

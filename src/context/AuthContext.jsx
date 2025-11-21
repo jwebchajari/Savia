@@ -12,21 +12,34 @@ export const AuthProvider = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
+
     const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
 
+    // Control de expiración de sesión (8 horas)
+    useEffect(() => {
+        if (!user) return;
+
+        const loginTime = localStorage.getItem("loginTime");
+        if (!loginTime) return;
+
+        const hoursSinceLogin =
+            (Date.now() - parseInt(loginTime)) / 1000 / 60 / 60;
+
+        if (hoursSinceLogin >= 8) {
+            console.log("⏳ Sesión expirada. Cerrando sesión...");
+            setShowExpiredModal(true); // Mostrar modal
+        }
+    }, [user]);
+
+    // Firebase Auth Listener
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            console.log("🔥 AuthContext MONTADO");
-            console.log("🔥 ENV UID:", ADMIN_UID);
-            console.log("🔥 USER UID:", currentUser?.uid);
-
             setUser(currentUser);
 
             if (currentUser && currentUser.uid === ADMIN_UID) {
-                console.log("🔥 ADMIN DETECTADO: TRUE");
                 setIsAdmin(true);
             } else {
-                console.log("🔥 ADMIN DETECTADO: FALSE");
                 setIsAdmin(false);
             }
 
@@ -36,10 +49,22 @@ export const AuthProvider = ({ children }) => {
         return () => unsubscribe();
     }, [ADMIN_UID]);
 
-    const logout = () => signOut(auth);
+    const logout = () => {
+        localStorage.removeItem("loginTime");
+        signOut(auth);
+    };
 
     return (
-        <AuthContext.Provider value={{ user, isAdmin, loading, logout }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                isAdmin,
+                loading,
+                logout,
+                showExpiredModal,
+                setShowExpiredModal
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

@@ -1,5 +1,9 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth, browserLocalPersistence, setPersistence } from "firebase/auth";
+import {
+	getAuth,
+	setPersistence,
+	browserLocalPersistence,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
 
@@ -16,24 +20,14 @@ const firebaseConfig = {
 	measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Evita múltiples inicializaciones en Next.js
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-// Auth
 export const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence); // Persistencia para Next.js
 
-// Persistencia (OBLIGATORIO en Next o rompe credenciales)
-if (typeof window !== "undefined") {
-	setPersistence(auth, browserLocalPersistence);
-}
-
-// Firestore
 export const db = getFirestore(app);
-
-// Realtime DB
 export const rtdb = getDatabase(app);
 
-// Analytics sólo en el navegador
 if (typeof window !== "undefined") {
 	import("firebase/analytics").then(({ getAnalytics }) => {
 		analytics = getAnalytics(app);

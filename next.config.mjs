@@ -4,8 +4,30 @@ const nextConfig = {
     appDir: true,
     externalDir: true,
   },
-  // 👇 ESTA ES LA CLAVE
-  srcDir: 'src',
+
+  srcDir: "src",
+
+  // 👇 Configuración para permitir imágenes externas
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.googleusercontent.com",
+      }
+    ],
+  },
 };
 
 export default nextConfig;
