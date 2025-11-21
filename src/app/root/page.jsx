@@ -187,14 +187,7 @@ export default function ProductosRootPage() {
                             Importar Excel
                         </button>
 
-                        {/* DESCARGAR PLANTILLA */}
-                        <a
-                            href="/mnt/data/plantillaProductos.xlsx"
-                            download
-                            className="btn btn-outline-secondary px-3"
-                        >
-                            Descargar plantilla
-                        </a>
+                   
 
                         {/* EXPORTAR */}
                         <button
