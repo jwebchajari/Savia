@@ -13,7 +13,7 @@ export default function NavbarRoot() {
             <div className="container d-flex justify-content-between align-items-center">
 
                 {/* Logo */}
-                <Link href="/root" className="d-flex align-items-center">
+                <Link href="/root/productos" className="d-flex align-items-center">
                     <Image
                         src="/savia.jpg"
                         alt="Savia Logo"
