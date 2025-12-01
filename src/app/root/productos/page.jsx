@@ -21,7 +21,7 @@ export default function RootPage() {
     return (
         <>
             <NavbarRoot />
-
+            
             <main className="container py-5" style={{ marginTop: "80px" }}>
                 <h1 className="mb-4">Bienvenido Root</h1>
                 <p className="text-muted mb-4">Panel de administración</p>

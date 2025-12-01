@@ -10,6 +10,7 @@ import ProductTable from "@/_components/Root/Products/ProductTable";
 import { getProducts, deleteProduct } from "@/services/productsService";
 import * as XLSX from "xlsx";
 
+
 // Las mismas categorías del sistema
 const CATEGORIES = [
     "Vegano",
@@ -164,7 +165,7 @@ export default function ProductosRootPage() {
     return (
         <>
             <NavbarRoot />
-
+           
             <main className="container py-5" style={{ marginTop: 80 }}>
 
                 {/* HEADER */}
