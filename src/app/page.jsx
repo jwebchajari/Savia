@@ -6,7 +6,6 @@ import Footer from "@/_components/Footer/Footer";
 import Navbar from "@/_components/Navbar/Navbar";
 import WeeklyOffers from "@/_components/Offers/WeeklyOffers";
 
-
 export default function Home() {
   return (
     <>
@@ -15,8 +14,8 @@ export default function Home() {
       <Categories />
       <WeeklyOffers />
       <Allcategories />
-      <ContactSection/>
-      <Footer/>
+      <ContactSection />
+      <Footer />
     </>
   );
 }
