@@ -22,18 +22,23 @@ export default function RootPage() {
         <>
             <NavbarRoot />
 
-            <main className="container py-5" style={{ marginTop: "80px" }}>
+            <main className="container py-5" >
                 <h1 className="mb-4">Bienvenido Root</h1>
                 <p className="text-muted mb-4">Panel de administración</p>
 
                 <div className="row g-4">
 
+                    {/* ---------------------- */}
+                    {/*    PRODUCTOS          */}
+                    {/* ---------------------- */}
                     <div className="col-12 col-md-4">
                         <div className="card shadow-sm p-4">
                             <h4 className="mb-3">Productos</h4>
-                            <p className="text-muted mb-3">Gestioná los productos del catálogo.</p>
+                            <p className="text-muted mb-3">
+                                Gestioná los productos del catálogo.
+                            </p>
 
-                            <Link href="/root/productos" className="btn btn-savia w-100 mb-2">
+                            <Link href="/root/productos/todos-los-productos" className="btn btn-savia w-100 mb-2">
                                 Ver productos
                             </Link>
 
@@ -43,24 +48,34 @@ export default function RootPage() {
                         </div>
                     </div>
 
+                    {/* ---------------------- */}
+                    {/*   DATOS COMERCIALES   */}
+                    {/* ---------------------- */}
                     <div className="col-12 col-md-4">
                         <div className="card shadow-sm p-4">
-                            <h4 className="mb-3">Ofertas generales</h4>
-                            <p className="text-muted mb-3">Productos marcados como oferta general.</p>
+                            <h4 className="mb-3">Datos comerciales</h4>
+                            <p className="text-muted mb-3">
+                                Información del local: redes, ubicación, delivery y más.
+                            </p>
 
-                            <Link href="/root/productos?filter=ofertas" className="btn btn-savia w-100">
-                                Ver ofertas generales
+                            <Link href="/root/datos" className="btn btn-savia w-100">
+                                Editar datos del local
                             </Link>
                         </div>
                     </div>
 
+                    {/* ---------------------- */}
+                    {/*      MIS PEDIDOS      */}
+                    {/* ---------------------- */}
                     <div className="col-12 col-md-4">
                         <div className="card shadow-sm p-4">
-                            <h4 className="mb-3">Ofertas de la semana</h4>
-                            <p className="text-muted mb-3">Seleccioná las ofertas semanales.</p>
+                            <h4 className="mb-3">Mis pedidos</h4>
+                            <p className="text-muted mb-3">
+                                Anotador para registrar ventas del día o pedidos pendientes.
+                            </p>
 
-                            <Link href="/root/productos?filter=semana" className="btn btn-savia w-100">
-                                Ver ofertas de la semana
+                            <Link href="/root/pedidos" className="btn btn-savia w-100">
+                                Ir al anotador
                             </Link>
                         </div>
                     </div>

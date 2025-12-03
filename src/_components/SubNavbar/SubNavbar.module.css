@@ -1,0 +1,66 @@
+/* --- SubNavbar --- */
+.subnav {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 2px solid var(--savia-main);
+    padding: 0.4rem 0.2rem;
+    position: sticky;
+    top: 56px;
+    /* justo debajo del navbar root */
+    z-index: 80;
+
+margin-bottom: 2em;
+}
+
+/* Contenedor scrolleable en móvil */
+.scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 0 1rem;
+    scrollbar-width: none;
+    /* Firefox */
+    margin-top: 2em;
+    align-items: center;
+
+}
+
+.scroller::-webkit-scrollbar {
+    display: none;
+    /* Chrome */
+}
+
+.link {
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: var(--savia-deep);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: 0.25s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.link:hover {
+    color: var(--savia-main);
+}
+
+.active {
+    color: var(--savia-main);
+    border-bottom: 2px solid var(--savia-main);
+}
+
+/* --- Desktop --- */
+@media (min-width: 992px) {
+    .scroller {
+        justify-content: center;
+        overflow-x: visible;
+        gap: 2rem;
+    }
+
+    .link {
+        font-size: 1rem;
+        padding: 10px 6px;
+    }
+}

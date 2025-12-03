@@ -11,12 +11,15 @@ import "swiper/css";
 import styles from "./Categories.module.css";
 
 const categories = [
-    { name: "Vegano", slug: "vegano", img: "/categories/veganos.png" },
+    { name: "Vegano", slug: "vegano", img: "/categories/vegano.png" },
     { name: "Frutos secos", slug: "frutos-secos", img: "/categories/frutos-secos.png" },
     { name: "Sin Lactosa", slug: "sin-lactosa", img: "/categories/sin-lactosa.png" },
     { name: "Sin TACC", slug: "sin-tacc", img: "/categories/sin-tacc.png" },
     { name: "Sin Azúcar", slug: "sin-azucar", img: "/categories/sin-azucar.png" },
     { name: "Yuyitos", slug: "yuyitos", img: "/categories/yuyitos.png" },
+    { name: "Condimentos", slug: "condimentos", img: "/categories/condimentos.png" },
+    { name: "Suplementos vitamínicos", slug: "suplementos-vitaminicos", img: "/categories/suplementos-vitaminicos.png" },
+    { name: "Suplementos dietarios", slug: "suplementos-dietarios", img: "/categories/suplementos-dietarios.png" },
     { name: "Ofertas", slug: "ofertas", img: "/categories/ofertas.png" },
 ];
 
@@ -28,7 +31,6 @@ export default function CategoriesCarousel() {
         c.name.toLowerCase().includes(query.toLowerCase())
     );
 
-    // Detectar pantalla
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 992);
         handleResize();
@@ -40,7 +42,7 @@ export default function CategoriesCarousel() {
         <section className="container mt-4 mb-4">
             <h2 className={styles.title}>Categorías</h2>
 
-            {/* SEARCH */}
+            {/* BUSCADOR */}
             <input
                 type="text"
                 placeholder="Buscar categoría..."
@@ -60,7 +62,7 @@ export default function CategoriesCarousel() {
                 </Swiper>
             )}
 
-            {/* DESKTOP → CENTRADO */}
+            {/* DESKTOP → GRID */}
             {!isMobile && (
                 <div className={styles.desktopGrid}>
                     {filtered.map((cat) => (

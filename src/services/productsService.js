@@ -8,7 +8,8 @@ const mapProduct = (id, data) => ({
 	id,
 	nombre: data.nombre || "",
 	descripcion: data.descripcion || "",
-	categoria: data.categoria || "",
+	categoriaNombre: data.categoriaNombre || "",
+	categoriaSlug: data.categoriaSlug || "",
 	precio: typeof data.precio === "number" ? data.precio : 0,
 	precioOferta:
 		typeof data.precioOferta === "number" ? data.precioOferta : null,
@@ -50,9 +51,7 @@ export const createProduct = async (productData) => {
 		productData.precioOferta &&
 		Number(productData.precioOferta) >= Number(productData.precio)
 	) {
-		throw new Error(
-			"El precio de oferta no puede ser mayor o igual al precio normal."
-		);
+		throw new Error("El precio de oferta no puede ser mayor o igual al precio normal.");
 	}
 
 	const productsRef = ref(rtdb, PRODUCTS_PATH);
@@ -65,7 +64,8 @@ export const createProduct = async (productData) => {
 		id,
 		nombre: productData.nombre,
 		descripcion: productData.descripcion || "",
-		categoria: productData.categoria || "",
+		categoriaNombre: productData.categoriaNombre,
+		categoriaSlug: productData.categoriaSlug,
 		precio: Number(productData.precio),
 		precioOferta:
 			productData.precioOferta !== "" && productData.precioOferta != null
@@ -89,9 +89,7 @@ export const updateProduct = async (id, productData) => {
 		productData.precioOferta &&
 		Number(productData.precioOferta) >= Number(productData.precio)
 	) {
-		throw new Error(
-			"El precio de oferta no puede ser mayor o igual al precio normal."
-		);
+		throw new Error("El precio de oferta no puede ser mayor o igual al precio normal.");
 	}
 
 	const productRef = ref(rtdb, `${PRODUCTS_PATH}/${id}`);
@@ -101,7 +99,8 @@ export const updateProduct = async (id, productData) => {
 	const payload = {
 		nombre: productData.nombre,
 		descripcion: productData.descripcion || "",
-		categoria: productData.categoria || "",
+		categoriaNombre: productData.categoriaNombre,
+		categoriaSlug: productData.categoriaSlug,
 		precio: Number(productData.precio),
 		precioOferta:
 			productData.precioOferta !== "" && productData.precioOferta != null

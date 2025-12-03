@@ -1,11 +1,15 @@
+/* ============================
+   Mobile-first
+============================ */
+
 .section {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 
 .title {
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: 1.7rem;
     color: var(--savia-deep);
     text-align: center;
     margin-bottom: 1.5rem;
@@ -16,20 +20,20 @@
     background: #fff;
     border: 2px solid var(--savia-main);
     border-radius: 18px;
-    padding: 1.5rem;
+    padding: 1.2rem;
     box-shadow: var(--shadow-md);
 }
 
 .row {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.4rem;
+    gap: 0.9rem;
+    margin-bottom: 1.3rem;
 }
 
 .iconWrapper {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     border-radius: 12px;
     background: #e8f3ee;
     display: flex;
@@ -40,8 +44,8 @@
 
 .icon {
     color: var(--savia-main);
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .label {
@@ -61,21 +65,101 @@
     text-decoration: underline;
 }
 
+/* Estado del local */
+.openStatus {
+    margin: 0.3rem 0 0.3rem;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.open {
+    color: #0f9d58;
+}
+
+.closed {
+    color: #d9534f;
+}
+
 .schedule {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     color: var(--neutral-ink);
 }
 
+/* ============================
+   Acordeón
+============================ */
+
+.accordion {
+    margin-top: 0.6rem;
+}
+
+.accHeader {
+    font-weight: 600;
+    color: var(--savia-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+}
+
+.accIcon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    transition: 0.25s;
+}
+
+details[open] .accIcon {
+    transform: rotate(180deg);
+}
+
+/* Lista de horarios */
+.scheduleList {
+    margin-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.scheduleItem {
+    display: flex;
+    justify-content: space-between;
+    background: #f8faf9;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border-left: 4px solid var(--savia-main);
+    font-family: var(--font-base);
+    font-size: 0.95rem;
+}
+
+.day {
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--savia-deep);
+}
+
+.hours {
+    color: var(--neutral-ink);
+    font-weight: 500;
+}
+
+.closedTag {
+    font-weight: 600;
+    color: #d9534f;
+}
+
+/* Botón */
 .btn {
     display: block;
-    text-align: center;
     margin-top: 1rem;
     background: var(--savia-main);
     color: white;
-    padding: 0.8rem;
+    padding: 0.85rem;
     border-radius: 12px;
-    font-family: var(--font-base);
+    text-align: center;
     font-size: 1.05rem;
     font-weight: 600;
     text-decoration: none;
@@ -85,15 +169,23 @@
     background: #064c2c;
 }
 
-/* Desktop */
+/* ============================
+   Desktop scaling
+============================ */
+@media (min-width: 768px) {
+    .card {
+        padding: 1.7rem;
+    }
+
+    .title {
+        font-size: 2.1rem;
+    }
+}
+
 @media (min-width: 992px) {
     .card {
         padding: 2rem;
         max-width: 650px;
         margin: 0 auto;
-    }
-
-    .title {
-        font-size: 2.4rem;
     }
 }

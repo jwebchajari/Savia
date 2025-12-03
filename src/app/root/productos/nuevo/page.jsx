@@ -5,7 +5,18 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import NavbarRoot from "@/_components/Navbar/NavbarRoot";
 import { createProduct } from "@/services/productsService";
+import SuccessModal from "@/_components/Modals/SuccessModal"; // ← agregado
 import styles from "./page.module.css";
+
+// ---- convertir categoría a slug ----
+function slugify(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+}
 
 const CATEGORIES = [
     "Vegano",
@@ -31,7 +42,8 @@ export default function NuevoProductoPage() {
     const [form, setForm] = useState({
         nombre: "",
         descripcion: "",
-        categoria: "",
+        categoriaNombre: "",
+        categoriaSlug: "",
         precio: "",
         precioOferta: "",
         imagen: "",
@@ -43,6 +55,9 @@ export default function NuevoProductoPage() {
 
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
+
+    // ⭐ Nuevo: Modal de éxito
+    const [showSuccess, setShowSuccess] = useState(false);
 
     if (loading) return null;
     if (!user || !isAdmin) {
@@ -59,21 +74,26 @@ export default function NuevoProductoPage() {
         setError("");
 
         try {
-            if (!form.nombre || !form.precio || !form.categoria) {
+            if (!form.nombre || !form.precio || !form.categoriaNombre) {
                 setError("Completá nombre, precio y categoría.");
                 return;
             }
 
-            if (form.precioOferta !== "" && Number(form.precioOferta) >= Number(form.precio)) {
+            if (
+                form.precioOferta !== "" &&
+                Number(form.precioOferta) >= Number(form.precio)
+            ) {
                 setError("El precio de oferta debe ser menor al precio normal.");
                 return;
             }
 
             setSaving(true);
+
             await createProduct(form);
 
-            alert("Producto creado correctamente.");
-            router.push("/root/productos");
+            // 🎉 Mostrar modal
+            setShowSuccess(true);
+
         } catch (err) {
             console.error(err);
             setError(err.message);
@@ -118,8 +138,12 @@ export default function NuevoProductoPage() {
                         <label className="form-label fw-bold">Categoría</label>
                         <select
                             className="form-select"
-                            value={form.categoria}
-                            onChange={(e) => update("categoria", e.target.value)}
+                            value={form.categoriaNombre}
+                            onChange={(e) => {
+                                const nombre = e.target.value;
+                                update("categoriaNombre", nombre);
+                                update("categoriaSlug", slugify(nombre));
+                            }}
                             required
                         >
                             <option value="">Seleccionar...</option>
@@ -157,12 +181,6 @@ export default function NuevoProductoPage() {
                             required
                             min="0"
                         />
-                        {form.tipoVenta === "kg" && (
-                            <small className="text-muted">Precio por KG (el cliente podrá seleccionar gramos)</small>
-                        )}
-                        {form.tipoVenta === "u" && (
-                            <small className="text-muted">Precio por unidad</small>
-                        )}
                     </div>
 
                     {/* Precio oferta */}
@@ -189,39 +207,31 @@ export default function NuevoProductoPage() {
                         />
                     </div>
 
-                    {/* ESTADOS VISUALES MEJORADOS */}
+                    {/* Estados */}
                     <div className="mt-4">
                         <label className="form-label fw-bold">Estado del producto</label>
 
                         <div className={styles.cardGroup}>
-
-                            {/* Disponible */}
                             <div
                                 onClick={() => update("disponible", !form.disponible)}
                                 className={`${styles.cardToggle} ${form.disponible ? styles.cardGreen : ""}`}
                             >
                                 <span>Disponible</span>
-                                <span className={`${styles.dot} ${form.disponible ? styles.green : styles.gray}`}></span>
                             </div>
 
-                            {/* Oferta General */}
                             <div
                                 onClick={() => update("ofertaGeneral", !form.ofertaGeneral)}
                                 className={`${styles.cardToggle} ${form.ofertaGeneral ? styles.cardOrange : ""}`}
                             >
                                 <span>Oferta General</span>
-                                <span className={`${styles.dot} ${form.ofertaGeneral ? styles.orange : styles.gray}`}></span>
                             </div>
 
-                            {/* Oferta Semana */}
                             <div
                                 onClick={() => update("ofertaSemana", !form.ofertaSemana)}
                                 className={`${styles.cardToggle} ${form.ofertaSemana ? styles.cardBlue : ""}`}
                             >
                                 <span>Oferta Semana</span>
-                                <span className={`${styles.dot} ${form.ofertaSemana ? styles.blue : styles.gray}`}></span>
                             </div>
-
                         </div>
                     </div>
 
@@ -238,6 +248,17 @@ export default function NuevoProductoPage() {
                     </button>
                 </form>
             </main>
+
+            {/* ⭐ MODAL DE ÉXITO ⭐ */}
+            <SuccessModal
+                show={showSuccess}
+                title="Producto agregado"
+                message="El producto se creó correctamente."
+                onClose={() => {
+                    setShowSuccess(false);
+                    router.push("/root/productos");
+                }}
+            />
         </>
     );
 }

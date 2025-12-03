@@ -8,7 +8,17 @@ import SuccessModal from "@/_components/Modals/SuccessModal";
 
 import { getProductById, updateProduct } from "@/services/productsService";
 
-import styles from "./page.module.css"; // usa las mismas clases que "nuevo producto"
+import styles from "./page.module.css";
+
+// Generar slug sin espacios ni tildes
+function slugify(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+}
 
 const CATEGORIES = [
     "Vegano",
@@ -39,17 +49,16 @@ export default function EditarProductoPage() {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
 
-    // Modal de éxito
     const [showSuccess, setShowSuccess] = useState(false);
 
-    // ⏳ Protección
+    // Protección
     useEffect(() => {
         if (!loading && (!user || !isAdmin)) {
             router.replace("/login");
         }
     }, [loading, user, isAdmin, router]);
 
-    // 🔥 Cargar producto por ID
+    // Cargar producto actual
     useEffect(() => {
         const load = async () => {
             const data = await getProductById(id);
@@ -62,7 +71,8 @@ export default function EditarProductoPage() {
             setForm({
                 nombre: data.nombre,
                 descripcion: data.descripcion || "",
-                categoria: data.categoria || "",
+                categoriaNombre: data.categoriaNombre || data.categoria || "",
+                categoriaSlug: data.categoriaSlug || slugify(data.categoria || ""),
                 precio: data.precio,
                 precioOferta: data.precioOferta ?? "",
                 imagen: data.imagen || "",
@@ -87,7 +97,7 @@ export default function EditarProductoPage() {
         setError("");
 
         try {
-            if (!form.nombre || !form.precio || !form.categoria) {
+            if (!form.nombre || !form.precio || !form.categoriaNombre) {
                 setError("Completá nombre, precio y categoría.");
                 return;
             }
@@ -101,9 +111,9 @@ export default function EditarProductoPage() {
             }
 
             setSaving(true);
+
             await updateProduct(id, form);
 
-            // Mostrar modal
             setShowSuccess(true);
 
         } catch (err) {
@@ -123,7 +133,6 @@ export default function EditarProductoPage() {
                 <h1 className="fw-bold mb-4">Editar producto</h1>
 
                 <form className="card p-4 shadow-sm" onSubmit={handleSubmit}>
-
                     {/* Nombre */}
                     <div className="mb-3">
                         <label className="form-label fw-bold">Nombre</label>
@@ -152,8 +161,12 @@ export default function EditarProductoPage() {
                         <label className="form-label fw-bold">Categoría</label>
                         <select
                             className="form-select"
-                            value={form.categoria}
-                            onChange={(e) => update("categoria", e.target.value)}
+                            value={form.categoriaNombre}
+                            onChange={(e) => {
+                                const nombre = e.target.value;
+                                update("categoriaNombre", nombre);
+                                update("categoriaSlug", slugify(nombre));
+                            }}
                             required
                         >
                             <option value="">Seleccionar...</option>
@@ -190,11 +203,6 @@ export default function EditarProductoPage() {
                             min="0"
                             required
                         />
-                        <small className="text-muted">
-                            {form.tipoVenta === "kg"
-                                ? "Precio por KG (el cliente puede elegir gramos)"
-                                : "Precio por unidad"}
-                        </small>
                     </div>
 
                     {/* Precio oferta */}
@@ -217,33 +225,26 @@ export default function EditarProductoPage() {
                             className="form-control"
                             value={form.imagen}
                             onChange={(e) => update("imagen", e.target.value)}
-                            placeholder="https://example.com/img.jpg"
                         />
                     </div>
 
-                    {/* Vista previa imagen */}
+                    {/* Vista previa */}
                     {form.imagen && (
                         <div className="text-center mb-4">
-                            <img
-                                src={form.imagen}
-                                alt="preview"
-                                style={{ maxWidth: 180, borderRadius: 12 }}
-                            />
+                            <img src={form.imagen} alt="" style={{ maxWidth: 180, borderRadius: 12 }} />
                         </div>
                     )}
 
-                    {/* ESTADOS VISUALES */}
+                    {/* Estados */}
                     <div className="mt-4">
                         <label className="form-label fw-bold">Estado del producto</label>
 
                         <div className={styles.cardGroup}>
-
                             <div
                                 onClick={() => update("disponible", !form.disponible)}
                                 className={`${styles.cardToggle} ${form.disponible ? styles.cardGreen : ""}`}
                             >
                                 <span>Disponible</span>
-                                <span className={`${styles.dot} ${form.disponible ? styles.green : styles.gray}`}></span>
                             </div>
 
                             <div
@@ -251,7 +252,6 @@ export default function EditarProductoPage() {
                                 className={`${styles.cardToggle} ${form.ofertaGeneral ? styles.cardOrange : ""}`}
                             >
                                 <span>Oferta General</span>
-                                <span className={`${styles.dot} ${form.ofertaGeneral ? styles.orange : styles.gray}`}></span>
                             </div>
 
                             <div
@@ -259,27 +259,18 @@ export default function EditarProductoPage() {
                                 className={`${styles.cardToggle} ${form.ofertaSemana ? styles.cardBlue : ""}`}
                             >
                                 <span>Oferta Semana</span>
-                                <span className={`${styles.dot} ${form.ofertaSemana ? styles.blue : styles.gray}`}></span>
                             </div>
-
                         </div>
                     </div>
 
-                    {/* Error */}
                     {error && <div className="alert alert-danger mt-3">{error}</div>}
 
-                    {/* Botón */}
-                    <button
-                        type="submit"
-                        className="btn btn-savia px-4 py-2 mt-4"
-                        disabled={saving}
-                    >
+                    <button type="submit" className="btn btn-savia px-4 py-2 mt-4" disabled={saving}>
                         {saving ? "Guardando..." : "Guardar cambios"}
                     </button>
                 </form>
             </main>
 
-            {/* Modal de éxito */}
             <SuccessModal
                 show={showSuccess}
                 title="Producto actualizado"
