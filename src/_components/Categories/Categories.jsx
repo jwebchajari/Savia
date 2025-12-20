@@ -23,7 +23,7 @@ const categories = [
     { name: "Yuyitos", slug: "yuyitos", img: "/categories/yuyitos.png" },
     { name: "Condimentos", slug: "condimentos", img: "/categories/condimentos.png" },
     { name: "Suplementos vitamínicos", slug: "suplementos-vitaminicos", img: "/categories/suplementos-vitaminicos.png" },
-    { name: "Suplementos dietarios", slug: "suplementos-dietarios", img: null },
+    { name: "Suplementos dietarios", slug: "suplementos-dietarios", img: "/placeholder-product.png" },
     { name: "Ofertas", slug: "ofertas", img: "/categories/ofertas.png" },
 ];
 

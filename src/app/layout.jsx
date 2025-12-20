@@ -6,6 +6,9 @@ import BootstrapClient from "@/_components/Boostrap/BootstrapClient";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 
+/* ==============================
+   METADATA GLOBAL
+============================== */
 export const metadata = {
   metadataBase: new URL("https://savia-sigma.vercel.app"),
 
@@ -15,15 +18,17 @@ export const metadata = {
   },
 
   description:
-    "Almacén natural en Chajarí. Frutos secos, suplementos, productos veganos, sin TACC y opciones saludables.",
+    "Savia es un almacén natural en Chajarí, Entre Ríos. Frutos secos, suplementos, productos veganos, sin TACC, sin azúcar y opciones saludables para todos los días.",
 
   keywords: [
     "almacén natural",
     "productos naturales",
     "frutos secos",
     "suplementos",
-    "sin TACC",
+    "suplementos dietarios",
     "vegano",
+    "sin TACC",
+    "sin azúcar",
     "alimentación saludable",
     "Chajarí",
     "Entre Ríos",
@@ -32,12 +37,19 @@ export const metadata = {
   authors: [{ name: "Savia – Almacén Natural" }],
   creator: "Savia – Almacén Natural",
 
+  alternates: {
+    canonical: "https://savia-sigma.vercel.app",
+  },
+
+  /* ---------- OPEN GRAPH (WhatsApp / Facebook / Instagram) ---------- */
   openGraph: {
-    title: "Savia – Almacén Natural",
+    title: "Savia – Almacén Natural | Chajarí",
     description:
-      "Productos naturales, frutos secos, suplementos y alimentos saludables en Chajarí.",
+      "Almacén natural en Chajarí. Frutos secos, suplementos y productos saludables.",
     url: "https://savia-sigma.vercel.app",
     siteName: "Savia – Almacén Natural",
+    locale: "es_AR",
+    type: "website",
     images: [
       {
         url: "/og-image.jpg",
@@ -46,28 +58,27 @@ export const metadata = {
         alt: "Savia – Almacén Natural",
       },
     ],
-    locale: "es_AR",
-    type: "website",
   },
 
+  /* ---------- TWITTER / X ---------- */
   twitter: {
     card: "summary_large_image",
     title: "Savia – Almacén Natural",
     description:
-      "Almacén natural en Chajarí con productos saludables, veganos y sin TACC.",
+      "Productos naturales, frutos secos y suplementos en Chajarí.",
     images: ["/og-image.jpg"],
   },
 
+  /* ---------- ICONOS ---------- */
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
   },
-
-  alternates: {
-    canonical: "https://savia-sigma.vercel.app",
-  },
 };
 
+/* ==============================
+   ROOT LAYOUT
+============================== */
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
@@ -79,25 +90,57 @@ export default function RootLayout({ children }) {
           </CartProvider>
         </AuthProvider>
 
-        {/* JSON-LD LocalBusiness */}
+        {/* ==============================
+           JSON-LD: LOCAL BUSINESS
+        ============================== */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Store",
+              "@id": "https://savia-sigma.vercel.app/#store",
               name: "Savia – Almacén Natural",
+              url: "https://savia-sigma.vercel.app",
               image: "https://savia-sigma.vercel.app/og-image.jpg",
+              telephone: "+5493456020167",
+              priceRange: "$$",
               address: {
                 "@type": "PostalAddress",
                 streetAddress: "Avenida Belgrano 2011",
                 addressLocality: "Chajarí",
                 addressRegion: "Entre Ríos",
+                postalCode: "3228",
                 addressCountry: "AR",
               },
-              openingHours: "Mo-Sa 07:30-12:45,15:30-21:00",
-              telephone: "+5493456020167",
-              url: "https://savia-sigma.vercel.app",
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ],
+                  opens: "07:30",
+                  closes: "12:45",
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ],
+                  opens: "15:30",
+                  closes: "21:00",
+                },
+              ],
               sameAs: [
                 "https://www.instagram.com/saviaalmacennatural/",
               ],

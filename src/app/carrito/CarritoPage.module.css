@@ -1,0 +1,265 @@
+/* ================================
+   PAGE WRAPPER
+================================ */
+.page {
+    margin-top: 4em;
+    min-height: 100vh;
+    background: #f8faf9;
+    display: flex;
+    justify-content: center;
+}
+
+/* ================================
+   CONTAINER (SIMULA DRAWER)
+================================ */
+.drawer {
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.35s ease-out forwards;
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .drawer {
+        max-width: 480px;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 18px;
+        min-height: calc(100vh - 3rem);
+        box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+}
+
+/* ================================
+   ANIMATION
+================================ */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* ================================
+   HEADER
+================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.countBadge {
+    background: rgba(28,113,76,.12);
+    color: var(--savia-main);
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 999px;
+}
+
+.backLink {
+    font-weight: 700;
+    font-size: .95rem;
+    color: var(--savia-main);
+    text-decoration: none;
+}
+
+/* ================================
+   CONTENT
+================================ */
+.contentScroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1rem;
+}
+
+/* ================================
+   EMPTY
+================================ */
+.empty {
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1.2rem;
+    border: 1px dashed #e5e7eb;
+    border-radius: 14px;
+    background: #fafafa;
+}
+
+.emptyTitle {
+    font-weight: 800;
+}
+
+.emptySub {
+    font-size: .95rem;
+    color: #6b7280;
+}
+
+/* ================================
+   ITEMS
+================================ */
+.items {
+    padding-top: .5rem;
+}
+
+.itemCard {
+    padding: .9rem 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.itemRow {
+    display: flex;
+    gap: .8rem;
+}
+
+.thumbWrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.itemInfo {
+    flex: 1;
+}
+
+.itemName {
+    font-weight: 800;
+    font-size: .95rem;
+}
+
+.itemMeta {
+    margin-top: .25rem;
+    font-size: .9rem;
+    color: #6b7280;
+}
+
+.lineTotal {
+    font-weight: 800;
+    color: var(--savia-main);
+    margin-left: 15px;
+}
+
+/* Controls */
+.controls {
+    margin-top: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.qtyBtn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--savia-main);
+    color: white;
+    border: none;
+    font-weight: 900;
+}
+
+.qty {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.removeBtn {
+    margin-left: auto;
+    background: rgba(204,58,58,.08);
+    border: 1px solid rgba(204,58,58,.25);
+    color: #cc3a3a;
+    padding: .3rem .6rem;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* ================================
+   SECTIONS
+================================ */
+.section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f1f1;
+}
+
+.sectionTitle {
+    font-weight: 800;
+    margin-bottom: .6rem;
+}
+
+/* Delivery */
+.option {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: .5rem;
+}
+
+/* ================================
+   FORM
+================================ */
+.input,
+.textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    padding: .7rem;
+    border-radius: 12px;
+    margin-bottom: .5rem;
+}
+
+/* ================================
+   FOOTER
+================================ */
+.footer {
+    border-top: 1px solid #eee;
+    padding: 1rem;
+    background: white;
+}
+
+.totalRowFinal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-bottom: .8rem;
+}
+
+.checkoutBtn {
+    width: 100%;
+    padding: .9rem;
+    border-radius: 14px;
+    background: var(--savia-main);
+    color: white;
+    font-weight: 900;
+    border: none;
+}
