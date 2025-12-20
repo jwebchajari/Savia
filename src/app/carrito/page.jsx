@@ -44,7 +44,6 @@ export default function CarritoPage() {
         setLoadingStore(true);
 
         const snap = await get(ref(rtdb, "local/datosComerciales"));
-
         const data = snap.exists() ? snap.val() : {};
 
         const deliveryRaw = data?.delivery ?? 0;
@@ -98,8 +97,18 @@ export default function CarritoPage() {
     [cart]
   );
 
+  // ✅ Google Maps: destino = dirección del local desde Firebase
+  const mapsQuery = useMemo(() => {
+    return storeData.direccion
+      ? encodeURIComponent(storeData.direccion)
+      : encodeURIComponent("Chajarí Entre Ríos Argentina");
+  }, [storeData.direccion]);
+
+  const mapsLink = useMemo(() => {
+    return `https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`;
+  }, [mapsQuery]);
+
   const sendToWhatsApp = () => {
-    // ✅ toma whatsapp desde Firebase si existe, si no usa fallback
     const phoneFromDb = String(storeData?.redes?.whatsapp || "").replace(/\D/g, "");
     const phone = phoneFromDb ? `549${phoneFromDb}` : "5493412275598";
 
@@ -112,7 +121,6 @@ export default function CarritoPage() {
     if (deliveryMethod === "domicilio") {
       msg += `📍 Dirección: ${address || "No indicada"}\n`;
     } else {
-      // ✅ dirección del local desde Firebase
       if (storeData.direccion) {
         msg += `🏪 Retiro en: ${storeData.direccion}\n`;
       }
@@ -142,7 +150,7 @@ export default function CarritoPage() {
     );
   };
 
-  const domicilioDisabled = loadingStore; // deshabilitar hasta tener costo
+  const domicilioDisabled = loadingStore;
 
   return (
     <>
@@ -167,7 +175,9 @@ export default function CarritoPage() {
             {cart.length === 0 ? (
               <div className={styles.empty}>
                 <p className={styles.emptyTitle}>Carrito vacío</p>
-                <p className={styles.emptySub}>Agregá productos para continuar 😊</p>
+                <p className={styles.emptySub}>
+                  Agregá productos para continuar 😊
+                </p>
               </div>
             ) : (
               <div className={styles.items}>
@@ -273,6 +283,7 @@ export default function CarritoPage() {
               </label>
             </div>
 
+            {/* FORM DOMICILIO */}
             {deliveryMethod === "domicilio" && (
               <div className={styles.section}>
                 <input
@@ -288,6 +299,34 @@ export default function CarritoPage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                 />
+              </div>
+            )}
+
+            {/* MAPA RETIRO */}
+            {deliveryMethod === "retiro" && storeData.direccion && (
+              <div className={styles.section}>
+                <div className={styles.sectionTitle}>Retiro en el local</div>
+
+                <p className={styles.localAddress}>📍 {storeData.direccion}</p>
+
+                <div className={styles.mapWrap}>
+                  <iframe
+                    title="Mapa Savia"
+                    className={styles.map}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`}
+                  />
+                </div>
+
+                <a
+                  href={mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mapBtn}
+                >
+                  📍 Cómo llegar
+                </a>
               </div>
             )}
           </div>

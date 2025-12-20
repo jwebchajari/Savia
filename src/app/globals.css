@@ -20,36 +20,7 @@ body {
     line-height: 1.5;
 }
 
-/* ------------------------------------------
-   TIPOGRAFÍAS LOCALES
--------------------------------------------*/
-@font-face {
-    font-family: "Avigea";
-    src: url("/fonts/avigea-regular.woff2") format("woff2");
-    font-weight: 400;
-    font-display: swap;
-}
 
-@font-face {
-    font-family: "Gotham";
-    src: url("/fonts/gotham-regular.woff2") format("woff2");
-    font-weight: 400;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Gotham";
-    src: url("/fonts/gotham-medium.woff2") format("woff2");
-    font-weight: 500;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Gotham";
-    src: url("/fonts/gotham-bold.woff2") format("woff2");
-    font-weight: 700;
-    font-display: swap;
-}
 
 .font-base {
     font-family: "Gotham", sans-serif;
