@@ -28,7 +28,6 @@ export default function ProductosRootClient() {
     const [products, setProducts] = useState([]);
     const [loadingProducts, setLoadingProducts] = useState(true);
 
-    // Filtros
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("");
     const [availability, setAvailability] = useState("");
@@ -42,14 +41,12 @@ export default function ProductosRootClient() {
         if (filterQuery === "semana") setOfferFilter("semana");
     }, [filterQuery]);
 
-    // Protección del admin
     useEffect(() => {
         if (!loading && (!user || !isAdmin)) {
             router.replace("/login");
         }
     }, [loading, user, isAdmin, router]);
 
-    // Obtener productos
     useEffect(() => {
         if (!user || !isAdmin) return;
 
@@ -67,7 +64,6 @@ export default function ProductosRootClient() {
         fetchProducts();
     }, [user, isAdmin]);
 
-    // Filtros memorizados
     const filteredProducts = useMemo(() => {
         let result = [...products];
 
@@ -89,7 +85,6 @@ export default function ProductosRootClient() {
         return result;
     }, [products, search, category, availability, offerFilter, sort]);
 
-    // Eliminar producto
     const handleDelete = async (id) => {
         try {
             await deleteProduct(id);
@@ -97,16 +92,6 @@ export default function ProductosRootClient() {
         } catch (err) {
             console.error("Error al eliminar:", err);
         }
-    };
-
-    // Exportar Excel
-    const exportToExcel = (rows) => {
-        if (!rows.length) return alert("No hay productos.");
-
-        const worksheet = XLSX.utils.json_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
-        XLSX.writeFile(workbook, "productos.xlsx");
     };
 
     if (loading) return null;
