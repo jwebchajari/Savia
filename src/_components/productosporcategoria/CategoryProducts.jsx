@@ -7,6 +7,9 @@ import styles from "./CategoryProducts.module.css";
 
 const GENERIC_IMG = "/placeholder-product.png"; // poner en /public
 
+const formatPrice = (value) =>
+    new Intl.NumberFormat("es-AR").format(Number(value || 0));
+
 export default function CategoryProducts({ slug }) {
     const { addToCart } = useCart();
 
@@ -14,10 +17,7 @@ export default function CategoryProducts({ slug }) {
     const [grams, setGrams] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const decodedSlug = useMemo(
-        () => (slug ? decodeURIComponent(slug) : ""),
-        [slug]
-    );
+    const decodedSlug = useMemo(() => (slug ? decodeURIComponent(slug) : ""), [slug]);
 
     const categoriaTexto = useMemo(
         () => decodedSlug.replace(/-/g, " "),
@@ -68,12 +68,13 @@ export default function CategoryProducts({ slug }) {
         });
     };
 
+    // ✅ TODO ES $/Kg
     const getFinalPrice = (producto, gramsValue) => {
         if (!gramsValue || gramsValue <= 0) return 0;
 
-        // precioOferta si existe, sino precio normal (ambos $/Kg)
-        const priceOferta = producto.precioOferta ?? producto.precio;
-        const pricePerGram = priceOferta / 1000;
+        const priceBase = Number(producto.precioOferta ?? producto.precio ?? 0); // $/Kg
+        const pricePerGram = priceBase / 1000;
+
         return Math.round(pricePerGram * gramsValue);
     };
 
@@ -116,11 +117,12 @@ export default function CategoryProducts({ slug }) {
                                     <h3 className={styles.name}>{item.nombre}</h3>
 
                                     <p className={styles.priceKg}>
-                                        ${item.precioOferta ?? item.precio} / Kg
+                                        ${formatPrice(item.precioOferta ?? item.precio)} / Kg
                                     </p>
 
                                     <div className={styles.gramControls}>
                                         <button
+                                            type="button"
                                             className={styles.gramBtn}
                                             onClick={() => adjustGrams(item.id, -50)}
                                         >
@@ -137,6 +139,7 @@ export default function CategoryProducts({ slug }) {
                                         />
 
                                         <button
+                                            type="button"
                                             className={styles.gramBtn}
                                             onClick={() => adjustGrams(item.id, +50)}
                                         >
@@ -145,11 +148,12 @@ export default function CategoryProducts({ slug }) {
                                     </div>
 
                                     <div className={styles.finalPrice}>
-                                        ${finalPrice}
-                                        <span className={styles.xgrams}> / {g}g</span>
+                                        ${formatPrice(finalPrice)}
+                                        <span className={styles.xgrams}> por {g}g</span>
                                     </div>
 
                                     <button
+                                        type="button"
                                         className={`${styles.btn} ${disabled ? styles.btnDisabled : ""}`}
                                         disabled={disabled}
                                         onClick={() =>
@@ -158,7 +162,9 @@ export default function CategoryProducts({ slug }) {
                                                 slug: `${item.id}-${g}`,
                                                 price: finalPrice,
                                                 quantity: 1,
+                                                image: item.imagen
                                             })
+
                                         }
                                     >
                                         Agregar al carrito
@@ -168,7 +174,8 @@ export default function CategoryProducts({ slug }) {
                         );
                     })}
                 </div>
-            )}
-        </section>
+            )
+            }
+        </section >
     );
 }

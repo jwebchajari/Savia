@@ -129,8 +129,10 @@ export default function WeeklyOffers() {
                                             name: `${item.nombre} (${g}g)`,
                                             slug: `${item.id}-${g}`,
                                             price: finalPrice,
-                                            quantity: 1
+                                            quantity: 1,
+                                            image: item.imagen
                                         })
+
                                     }
                                 >
                                     Agregar al carrito

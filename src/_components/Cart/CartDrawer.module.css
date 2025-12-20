@@ -1,10 +1,10 @@
 /* ================================
-   OVERLAY OSCURO
+   OVERLAY
 ================================ */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
     opacity: 0;
     visibility: hidden;
     transition: 0.25s ease;
@@ -25,32 +25,31 @@
     right: -100%;
     height: 100vh;
     background: #fff;
-    box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: right .35s ease;
-
-    width: 85%;
-    max-width: 380px;
-    padding: 1em;
+    transition: right 0.35s ease;
+    width: 88%;
+    max-width: 420px;
+    padding: 1rem 1rem;
+    border-left: 1px solid rgba(0, 0, 0, .06);
 }
 
 .drawerOpen {
     right: 0;
 }
 
-/* DESKTOP */
 @media (min-width: 992px) {
     .drawer {
-        width: 420px;
-        max-width: 420px;
+        width: 460px;
+        max-width: 460px;
         padding: 1rem 1.4rem;
     }
 }
 
 /* ================================
-   AREA SCROLLABLE
+   SCROLL
 ================================ */
 .contentScroll {
     flex: 1;
@@ -65,95 +64,227 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: .8rem;
-    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #eee;
 }
 
-.header h3 {
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.title {
     font-size: 1.55rem;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0;
+    color: var(--savia-dark);
+}
+
+.countBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(28, 113, 76, 0.12);
+    color: var(--savia-main);
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .closeBtn {
     background: none;
     border: none;
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem 0.4rem;
 }
 
 /* ================================
-   PRODUCTOS
+   EMPTY
 ================================ */
-.items {
-    padding-top: .8rem;
-}
-
 .empty {
     margin-top: 2rem;
     text-align: center;
     color: #777;
+    padding: 1.2rem;
+    border: 1px dashed #e5e7eb;
+    border-radius: 12px;
+    background: #fafafa;
+}
+
+.emptyTitle {
+    margin: 0;
+    font-weight: 700;
+    color: #444;
+}
+
+.emptySub {
+    margin: 0.35rem 0 0;
+    font-size: 0.95rem;
+}
+
+/* ================================
+   ITEMS
+================================ */
+.items {
+    padding-top: 0.8rem;
 }
 
 .itemCard {
-    padding: 1rem 0;
-    border-bottom: 1px solid #eee;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid #f1f1f1;
 }
 
-.info {
+.itemRow {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.6rem;
+    gap: 0.85rem;
+    align-items: flex-start;
 }
 
+.thumbWrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    flex: 0 0 auto;
+    background: #f8faf9;
+}
+
+.thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.itemInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.itemName {
+    font-weight: 800;
+    color: #1b1b1b;
+    font-size: 0.98rem;
+    line-height: 1.15;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.itemMeta {
+    margin-top: 0.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    color: #6b7280;
+    font-size: 0.92rem;
+}
+
+.unitPrice {
+    font-weight: 600;
+    color: #374151;
+}
+
+.dot {
+    opacity: 0.65;
+}
+
+.lineTotal {
+    font-weight: 700;
+    color: var(--savia-main);
+}
+
+/* Controls row */
 .controls {
+    margin-top: 0.65rem;
     display: flex;
-    justify-content: center;
-    gap: 0.8rem;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.controls button {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+.qtyBtn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     background: var(--savia-main);
     color: white;
     border: none;
     cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qtyBtn:hover {
+    background: #064f2d;
+}
+
+.qty {
+    min-width: 26px;
+    text-align: center;
+    font-weight: 800;
+    color: #111827;
 }
 
 .removeBtn {
-    background: none;
-    border: none;
-    color: #c92a2a;
-    font-size: 0.9rem;
+    margin-left: auto;
+    background: rgba(204, 58, 58, 0.08);
+    border: 1px solid rgba(204, 58, 58, 0.25);
+    color: #cc3a3a;
+    padding: 0.35rem 0.6rem;
+    border-radius: 10px;
+    font-size: 0.86rem;
     cursor: pointer;
+    font-weight: 700;
+}
+
+.removeBtn:hover {
+    background: rgba(204, 58, 58, 0.12);
 }
 
 /* ================================
-   MÉTODO DE ENTREGA
+   SECTIONS
 ================================ */
-.deliveryBox {
+.section {
     margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f1f1;
 }
 
-.deliveryTitle {
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    font-size: 1.05rem;
+.sectionTitle {
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+    color: #111827;
 }
 
+/* Delivery options */
 .deliveryOptions {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.6rem;
 }
 
 .option {
     display: flex;
+    gap: 0.7rem;
     align-items: center;
-    gap: 0.6rem;
+    padding: 0.75rem 0.8rem;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
 }
 
 .option input {
@@ -161,78 +292,137 @@
     height: 18px;
 }
 
+.optionText {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.optionMain {
+    font-weight: 800;
+    color: #111827;
+}
+
+.optionSub {
+    font-size: 0.92rem;
+    color: #6b7280;
+    margin-top: 0.1rem;
+}
+
+.optionActive {
+    border-color: rgba(28, 113, 76, 0.35);
+    background: rgba(28, 113, 76, 0.06);
+}
+
 /* ================================
-   FORMULARIO ENVÍO
+   FORM
 ================================ */
 .formBox {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    margin: 1rem 0;
+    gap: 0.65rem;
 }
 
-.formBox input,
-.formBox textarea {
+.label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #374151;
+}
+
+.input,
+.textarea {
     width: 100%;
-    border: 1px solid #ccc;
-    padding: 0.7rem;
-    border-radius: 8px;
-    font-size: .95rem;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: rgba(28, 113, 76, 0.55);
+    box-shadow: 0 0 0 3px rgba(28, 113, 76, 0.12);
+}
+
+.textarea {
+    min-height: 92px;
+    resize: vertical;
 }
 
 /* ================================
-   MAPA
+   MAP
 ================================ */
-.mapBox {
-    margin-bottom: 1rem;
-}
-
-.localLabel {
-    font-weight: 600;
-    margin-bottom: 0.1rem;
-}
-
 .localAddress {
-    font-size: .9rem;
-    margin-bottom: .5rem;
+    font-size: 0.95rem;
+    color: #374151;
+    margin: 0.2rem 0 0.75rem;
 }
 
 .map {
     width: 100%;
-    height: 170px;
+    height: 175px;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 /* ================================
    FOOTER
 ================================ */
 .footer {
-    border-top: 1px solid #ddd;
-    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 0.9rem;
+    padding-bottom: 0.2rem;
+    background: #fff;
 }
 
-.total {
+.totals {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.totalRow {
     display: flex;
     justify-content: space-between;
-    font-size: 1.35rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
+    color: #374151;
+    font-weight: 700;
+}
+
+.totalRowFinal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #111827;
+    padding-top: 0.55rem;
+    border-top: 1px dashed #e5e7eb;
 }
 
 .checkoutBtn {
     width: 100%;
-    padding: 0.9rem;
+    padding: 0.95rem;
     background: var(--savia-main);
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
     font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.4px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
     cursor: pointer;
+    transition: background 0.15s ease-out, transform 0.08s ease-out;
 }
 
 .checkoutBtn:hover {
     background: #064f2d;
+}
+
+.checkoutBtn:active {
+    transform: translateY(1px);
+}
+
+.checkoutBtn:disabled {
+    background: #c5c5c5;
+    cursor: not-allowed;
 }
