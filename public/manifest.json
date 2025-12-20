@@ -1,0 +1,16 @@
+{
+	"name": "Savia – Almacén Natural",
+	"short_name": "Savia",
+	"description": "Almacén natural en Chajarí. Productos saludables, veganos y suplementos.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#1C714C",
+	"icons": [
+		{
+			"src": "/favicon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}
