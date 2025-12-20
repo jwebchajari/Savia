@@ -11,7 +11,7 @@ export default function SubNavbar() {
         { label: "Crear Producto", href: "/root/productos/nuevo" },
         { label: "Listar Productos", href: "/root/productos/todos-los-productos" },
         { label: "Editar Datos", href: "/root/datos" },
-        { label: "Anotador", href: "/root/anotador" },
+
     ];
 
     return (

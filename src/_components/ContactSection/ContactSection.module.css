@@ -120,8 +120,7 @@ details[open] .accIcon {
     margin-top: 0.8rem;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 4px 0;
+    gap: 1em;
 }
 
 .scheduleItem {

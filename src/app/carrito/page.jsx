@@ -7,6 +7,7 @@ import { rtdb } from "@/firebase/firebase";
 import { ref, get } from "firebase/database";
 import Link from "next/link";
 import Navbar from "@/_components/Navbar/Navbar";
+import Footer from "@/_components/Footer/Footer";
 
 const GENERIC_IMG = "/placeholder-product.png";
 
@@ -114,9 +115,8 @@ export default function CarritoPage() {
 
     let msg = `🛒 *Pedido Savia*\n\n`;
 
-    msg += `Entrega: ${
-      deliveryMethod === "domicilio" ? "Domicilio" : "Retiro en local"
-    }\n`;
+    msg += `Entrega: ${deliveryMethod === "domicilio" ? "Domicilio" : "Retiro en local"
+      }\n`;
 
     if (deliveryMethod === "domicilio") {
       msg += `📍 Dirección: ${address || "No indicada"}\n`;
@@ -348,6 +348,7 @@ export default function CarritoPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

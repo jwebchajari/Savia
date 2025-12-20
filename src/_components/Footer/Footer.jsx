@@ -1,9 +1,19 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Footer.module.css";
 import { MapPin, Clock, Phone } from "lucide-react";
 
 export default function Footer() {
+    const [year, setYear] = useState("");
+
+    // ✅ Evita error de hydration
+    useEffect(() => {
+        setYear(new Date().getFullYear());
+    }, []);
+
     return (
         <footer className={styles.footer}>
             <div className="container">
@@ -11,14 +21,15 @@ export default function Footer() {
                 {/* GRID PRINCIPAL */}
                 <div className={styles.grid}>
 
-                    {/* BLOQUE BRAND (MOBILE: ROW, DESKTOP: COLUMN) */}
+                    {/* BRAND */}
                     <div className={styles.brandBlock}>
                         <Image
                             src="/savia.jpg"
-                            alt="Savia Logo"
+                            alt="Savia – Almacén Natural"
                             width={120}
                             height={40}
                             className={styles.logo}
+                            priority
                         />
 
                         <p className={styles.brandText}>
@@ -30,10 +41,26 @@ export default function Footer() {
                     <div className={styles.block}>
                         <h4 className={styles.title}>Navegación</h4>
                         <ul className={styles.list}>
-                            <li><Link href="/" className={styles.link}>Inicio</Link></li>
-                            <li><Link href="/categorias" className={styles.link}>Categorías</Link></li>
-                            <li><Link href="/ofertas" className={styles.link}>Ofertas</Link></li>
-                            <li><Link href="/contacto" className={styles.link}>Contacto</Link></li>
+                            <li>
+                                <Link href="/" className={styles.link}>
+                                    Inicio
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/categorias" className={styles.link}>
+                                    Categorías
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/ofertas" className={styles.link}>
+                                    Ofertas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/contacto" className={styles.link}>
+                                    Contacto
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
@@ -44,44 +71,44 @@ export default function Footer() {
                         <div className={styles.row}>
                             <Phone className={styles.icon} />
                             <Link
-                                href="https://wa.me/5493412275598"
+                                href="https://wa.me/5493456020167"
                                 target="_blank"
                                 className={styles.link}
                             >
-                                +54 9 341 227 5598
+                                +54 9 3456 02-0167
                             </Link>
                         </div>
 
                         <div className={styles.row}>
                             <MapPin className={styles.icon} />
                             <Link
-                                href="https://www.google.com/maps?q=Antartida+850,+Chajarí,+Entre+Ríos"
+                                href="https://www.google.com/maps?q=Av.+Belgrano+2011,+Chajarí,+Entre+Ríos"
                                 target="_blank"
                                 className={styles.link}
                             >
-                                Antártida 850 - Chajarí, Entre Ríos
+                                Av. Belgrano 2011 – Chajarí, Entre Ríos
                             </Link>
                         </div>
 
                         <div className={styles.row}>
                             <Clock className={styles.icon} />
                             <p className={styles.link}>
-                                Lun–Vie: 8:30–12:30 / 16:00–20:00 <br />
-                                Sáb: 8:30–13:00
+                                Lun a sáb 7:30 a 12:45 <br />
+                                15:30 a 21:00
                             </p>
                         </div>
                     </div>
                 </div>
 
-                {/* LÍNEA */}
-                <div className={styles.divider}></div>
+                {/* DIVISOR */}
+                <div className={styles.divider} />
 
                 {/* COPYRIGHT */}
                 <p className={styles.copy}>
-                    © {new Date().getFullYear()} Savia — Almacén Natural. Todos los derechos reservados.
+                    © {year} Savia — Almacén Natural. Todos los derechos reservados.
                 </p>
 
-                {/* CRÉDITO PERSONAL */}
+                {/* CRÉDITO */}
                 <p className={styles.credit}>
                     Creado por{" "}
                     <Link
@@ -92,7 +119,6 @@ export default function Footer() {
                         Juanma Toniolo
                     </Link>
                 </p>
-
             </div>
         </footer>
     );
