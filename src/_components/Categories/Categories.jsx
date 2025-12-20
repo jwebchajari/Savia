@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
+import Buscar from "@/_components/Buscar/Buscar";
 import styles from "./Categories.module.css";
+
+const PLACEHOLDER = "/placeholder-category.png";
 
 const categories = [
     { name: "Vegano", slug: "vegano", img: "/categories/vegano.png" },
@@ -19,68 +23,71 @@ const categories = [
     { name: "Yuyitos", slug: "yuyitos", img: "/categories/yuyitos.png" },
     { name: "Condimentos", slug: "condimentos", img: "/categories/condimentos.png" },
     { name: "Suplementos vitamínicos", slug: "suplementos-vitaminicos", img: "/categories/suplementos-vitaminicos.png" },
-    { name: "Suplementos dietarios", slug: "suplementos-dietarios", img: "/categories/suplementos-dietarios.png" },
+    { name: "Suplementos dietarios", slug: "suplementos-dietarios", img: null },
     { name: "Ofertas", slug: "ofertas", img: "/categories/ofertas.png" },
 ];
 
 export default function CategoriesCarousel() {
-    const [query, setQuery] = useState("");
-    const [isMobile, setIsMobile] = useState(false);
-
-    const filtered = categories.filter((c) =>
-        c.name.toLowerCase().includes(query.toLowerCase())
-    );
-
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 992);
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    const router = useRouter();
 
     return (
         <section className="container mt-4 mb-4">
             <h2 className={styles.title}>Categorías</h2>
 
-            {/* BUSCADOR */}
-            <input
-                type="text"
-                placeholder="Buscar categoría..."
-                className={styles.search}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-            />
+            {/* 🔍 BUSCADOR DE PRODUCTOS (Firebase + Fuse) */}
+            <div className={styles.searchWrap}>
+                <Buscar
+                    placeholder="Buscar productos…"
+                    onSelect={(product) => {
+                        // OPCIÓN A: ir al producto
+                        // router.push(`/producto/${product.id}`);
+
+                        // OPCIÓN B (recomendada ahora): ir a la categoría
+                        if (product.categoriaSlug) {
+                            router.push(`/categoria/${product.categoriaSlug}`);
+                        }
+                    }}
+                />
+            </div>
 
             {/* MOBILE → SWIPER */}
-            {isMobile && (
-                <Swiper slidesPerView="auto" spaceBetween={20} className={styles.swiper}>
-                    {filtered.map((cat) => (
+            <div className={styles.mobileOnly}>
+                <Swiper slidesPerView="auto" spaceBetween={16}>
+                    {categories.map((cat) => (
                         <SwiperSlide key={cat.slug} className={styles.slide}>
                             <CategoryItem {...cat} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
-            )}
+            </div>
 
             {/* DESKTOP → GRID */}
-            {!isMobile && (
+            <div className={styles.desktopOnly}>
                 <div className={styles.desktopGrid}>
-                    {filtered.map((cat) => (
+                    {categories.map((cat) => (
                         <div key={cat.slug} className={styles.desktopItem}>
                             <CategoryItem {...cat} />
                         </div>
                     ))}
                 </div>
-            )}
+            </div>
         </section>
     );
 }
 
 function CategoryItem({ name, slug, img }) {
+    const src = img || PLACEHOLDER;
+
     return (
         <Link href={`/categoria/${slug}`} className={styles.item}>
             <div className={styles.circle}>
-                <Image src={img} alt={name} fill className={styles.image} />
+                <Image
+                    src={src}
+                    alt={name}
+                    fill
+                    sizes="(max-width: 768px) 80px, 110px"
+                    className={styles.image}
+                />
             </div>
             <span className={styles.name}>{name}</span>
         </Link>

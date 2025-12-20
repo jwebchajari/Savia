@@ -6,7 +6,7 @@
     margin-bottom: 1.5rem;
 }
 
-/* Searchbar */
+/* Search */
 .search {
     width: 100%;
     padding: .75rem 1rem;
@@ -16,54 +16,69 @@
     font-size: .95rem;
 }
 
-/* ---------- MOBILE (swiper) ---------- */
-.swiper {
-    padding: .5rem 0 1rem;
+/* ---------- VISIBILITY ---------- */
+.mobileOnly {
+    display: block;
 }
 
+.desktopOnly {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .mobileOnly {
+        display: none;
+    }
+
+    .desktopOnly {
+        display: block;
+    }
+}
+
+/* ---------- SWIPER ---------- */
 .slide {
     width: auto !important;
 }
 
-/* ---------- ICS ---------- */
+/* ---------- ITEM ---------- */
 .item {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+    width: 90px;
 }
 
+/* ---------- CIRCLE ---------- */
 .circle {
-    width: 100%;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--savia-main);
     background: #f5f5f5;
     position: relative;
     margin-bottom: .5rem;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
 }
 
+/* Imagen siempre bien centrada */
 .image {
-    width: 100%;
     object-fit: cover;
 }
 
+/* ---------- TEXT ---------- */
 .name {
-    font-size: .9rem;
+    font-size: .85rem;
     font-family: "Gotham", sans-serif;
     color: #333;
     text-align: center;
 }
 
-/* ---------- DESKTOP GRID ---------- */
+/* ---------- DESKTOP ---------- */
 .desktopGrid {
     display: flex;
     justify-content: center;
-    gap: 1em;
+    gap: 1.2rem;
     flex-wrap: wrap;
 }
 
@@ -80,4 +95,13 @@
     .name {
         font-size: 1rem;
     }
+
+    .item {
+        width: 120px;
+    }
+}
+
+
+.searchWrap {
+    margin: 0 auto 1.5rem;
 }
