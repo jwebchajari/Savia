@@ -34,17 +34,21 @@
 }
 
 .circle {
-    width: 90px;
-    height: 90px;
+    width: 100%;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--savia-main);
     background: #f5f5f5;
     position: relative;
     margin-bottom: .5rem;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
 
 .image {
+    width: 100%;
     object-fit: cover;
 }
 
