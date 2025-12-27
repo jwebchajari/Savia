@@ -3,20 +3,41 @@ import { ref, push, set, get, update, remove } from "firebase/database";
 
 const PRODUCTS_PATH = "products";
 
+// Generar slug sin espacios ni tildes (por si te llega vacío)
+function slugify(str) {
+	return (str || "")
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^a-z0-9-]/g, "");
+}
+
 // Normaliza un objeto del RTDB
 const mapProduct = (id, data) => ({
 	id,
 	nombre: data.nombre || "",
 	descripcion: data.descripcion || "",
-	categoriaNombre: data.categoriaNombre || "",
-	categoriaSlug: data.categoriaSlug || "",
-	precio: typeof data.precio === "number" ? data.precio : 0,
+	categoriaNombre: data.categoriaNombre || data.categoria || "",
+	categoriaSlug:
+		data.categoriaSlug ||
+		slugify(data.categoriaNombre || data.categoria || ""),
+	precio:
+		typeof data.precio === "number"
+			? data.precio
+			: Number(data.precio) || 0,
 	precioOferta:
-		typeof data.precioOferta === "number" ? data.precioOferta : null,
+		typeof data.precioOferta === "number"
+			? data.precioOferta
+			: data.precioOferta != null && data.precioOferta !== ""
+			? Number(data.precioOferta) || null
+			: null,
 	imagen: data.imagen || "",
-	disponible: data.disponible ?? true,
-	ofertaGeneral: data.ofertaGeneral ?? false,
-	ofertaSemana: data.ofertaSemana ?? false,
+	disponible: typeof data.disponible === "boolean" ? data.disponible : true,
+	ofertaGeneral: !!data.ofertaGeneral,
+	ofertaSemana: !!data.ofertaSemana,
+	tipoVenta:
+		data.tipoVenta === "u" || data.tipoVenta === "unidad" ? "u" : "kg", // ✅ CLAVE
 	createdAt: data.createdAt ?? null,
 	updatedAt: data.updatedAt ?? null,
 });
@@ -47,11 +68,24 @@ export const getProductById = async (id) => {
 
 // Crear producto con validación
 export const createProduct = async (productData) => {
+	const precio = Number(productData.precio);
+	const precioOferta =
+		productData.precioOferta !== "" && productData.precioOferta != null
+			? Number(productData.precioOferta)
+			: null;
+
+	if (!Number.isFinite(precio) || precio <= 0) {
+		throw new Error("El precio debe ser válido.");
+	}
+
 	if (
-		productData.precioOferta &&
-		Number(productData.precioOferta) >= Number(productData.precio)
+		precioOferta != null &&
+		Number.isFinite(precioOferta) &&
+		precioOferta >= precio
 	) {
-		throw new Error("El precio de oferta no puede ser mayor o igual al precio normal.");
+		throw new Error(
+			"El precio de oferta no puede ser mayor o igual al precio normal."
+		);
 	}
 
 	const productsRef = ref(rtdb, PRODUCTS_PATH);
@@ -60,21 +94,32 @@ export const createProduct = async (productData) => {
 
 	const now = Date.now();
 
+	const categoriaNombre =
+		productData.categoriaNombre || productData.categoria || "";
+	const categoriaSlug = productData.categoriaSlug || slugify(categoriaNombre);
+
+	const tipoVentaRaw = (productData.tipoVenta ?? "kg")
+		.toString()
+		.toLowerCase();
+	const tipoVenta =
+		tipoVentaRaw === "u" || tipoVentaRaw === "unidad" ? "u" : "kg";
+
 	const payload = {
 		id,
 		nombre: productData.nombre,
 		descripcion: productData.descripcion || "",
-		categoriaNombre: productData.categoriaNombre,
-		categoriaSlug: productData.categoriaSlug,
-		precio: Number(productData.precio),
+		categoriaNombre,
+		categoriaSlug,
+		precio,
 		precioOferta:
-			productData.precioOferta !== "" && productData.precioOferta != null
-				? Number(productData.precioOferta)
+			precioOferta != null && Number.isFinite(precioOferta)
+				? precioOferta
 				: null,
 		imagen: productData.imagen || "",
 		disponible: !!productData.disponible,
 		ofertaGeneral: !!productData.ofertaGeneral,
 		ofertaSemana: !!productData.ofertaSemana,
+		tipoVenta, // ✅ CLAVE
 		createdAt: now,
 		updatedAt: now,
 	};
@@ -85,31 +130,54 @@ export const createProduct = async (productData) => {
 
 // Actualizar producto con validación
 export const updateProduct = async (id, productData) => {
+	const precio = Number(productData.precio);
+	const precioOferta =
+		productData.precioOferta !== "" && productData.precioOferta != null
+			? Number(productData.precioOferta)
+			: null;
+
+	if (!Number.isFinite(precio) || precio <= 0) {
+		throw new Error("El precio debe ser válido.");
+	}
+
 	if (
-		productData.precioOferta &&
-		Number(productData.precioOferta) >= Number(productData.precio)
+		precioOferta != null &&
+		Number.isFinite(precioOferta) &&
+		precioOferta >= precio
 	) {
-		throw new Error("El precio de oferta no puede ser mayor o igual al precio normal.");
+		throw new Error(
+			"El precio de oferta no puede ser mayor o igual al precio normal."
+		);
 	}
 
 	const productRef = ref(rtdb, `${PRODUCTS_PATH}/${id}`);
-
 	const now = Date.now();
+
+	const categoriaNombre =
+		productData.categoriaNombre || productData.categoria || "";
+	const categoriaSlug = productData.categoriaSlug || slugify(categoriaNombre);
+
+	const tipoVentaRaw = (productData.tipoVenta ?? "kg")
+		.toString()
+		.toLowerCase();
+	const tipoVenta =
+		tipoVentaRaw === "u" || tipoVentaRaw === "unidad" ? "u" : "kg";
 
 	const payload = {
 		nombre: productData.nombre,
 		descripcion: productData.descripcion || "",
-		categoriaNombre: productData.categoriaNombre,
-		categoriaSlug: productData.categoriaSlug,
-		precio: Number(productData.precio),
+		categoriaNombre,
+		categoriaSlug,
+		precio,
 		precioOferta:
-			productData.precioOferta !== "" && productData.precioOferta != null
-				? Number(productData.precioOferta)
+			precioOferta != null && Number.isFinite(precioOferta)
+				? precioOferta
 				: null,
 		imagen: productData.imagen || "",
 		disponible: !!productData.disponible,
 		ofertaGeneral: !!productData.ofertaGeneral,
 		ofertaSemana: !!productData.ofertaSemana,
+		tipoVenta, // ✅ CLAVE
 		updatedAt: now,
 	};
 

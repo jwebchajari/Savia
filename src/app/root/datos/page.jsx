@@ -251,8 +251,6 @@ export default function DatosComerciales() {
 
   return (
     <>
-      <NavbarRoot />
-
       <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={styles.title}>Datos Comerciales</h1>

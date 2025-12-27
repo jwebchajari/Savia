@@ -8,21 +8,25 @@
     text-align: center;
 }
 
-/* ✅ Flex row wrap */
+/* ✅ Grid flex con items estirables (cards mismas alturas por fila) */
 .grid {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
     justify-content: center;
+    align-items: stretch;
+    /* ✅ estira items para igual altura */
 }
 
-/* Responsive widths */
+/* Base */
 .gridItem {
     flex: 0 1 100%;
     max-width: 100%;
+    display: flex;
+    /* ✅ permite que .card haga height:100% */
 }
 
+/* 2 columnas */
 @media (min-width: 576px) {
     .gridItem {
         flex: 0 1 calc(50% - 16px);
@@ -30,6 +34,7 @@
     }
 }
 
+/* 3 columnas */
 @media (min-width: 768px) {
     .gridItem {
         flex: 0 1 calc(33.333% - 16px);
@@ -37,6 +42,7 @@
     }
 }
 
+/* 4 columnas */
 @media (min-width: 992px) {
     .gridItem {
         flex: 0 1 calc(25% - 16px);
@@ -51,18 +57,17 @@
     border-radius: 16px;
     padding: 1.1rem;
     position: relative;
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 380px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
-}
 
-/* En mobile, que no quede tan alta */
-@media (max-width: 575px) {
-    .card {
-        min-height: 360px;
-    }
+    min-height: 380px;
+    height: 100%;
+    /* ✅ igual altura */
+    width: 100%;
+
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 /*************** BADGE ***************/
@@ -91,6 +96,7 @@
     overflow: hidden;
     display: block;
     margin-bottom: 1rem;
+    flex: 0 0 auto;
 }
 
 .productImg {
@@ -108,11 +114,15 @@
     margin-bottom: 0.3rem;
     text-align: center;
 
-    /* 2 líneas máx para que no rompa alturas */
+    /* clamp 2 líneas + reserva mínima 2 líneas */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+
+    line-height: 1.25;
+    min-height: calc(1.25em * 2);
+    /* ✅ mínimo 2 líneas */
 }
 
 .priceKg {
@@ -121,12 +131,33 @@
     margin-bottom: 1rem;
 }
 
-/*************** GRAM CONTROLS ***************/
+/* si hay oferta */
+.priceRow {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.oldPrice {
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.nowPrice {
+    font-weight: 700;
+}
+
+/*************** GRAM/UNIT CONTROLS ***************/
 .gramControls {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    flex: 0 0 auto;
 }
 
 .gramBtn {
@@ -162,6 +193,7 @@
     font-weight: 700;
     color: var(--savia-main);
     margin-bottom: 1rem;
+    flex: 0 0 auto;
 }
 
 .xgrams {
@@ -182,8 +214,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: background 0.15s ease-out;
+
     margin-top: auto;
-    /* empuja el botón abajo */
+    /* ✅ empuja el botón al fondo SIEMPRE */
 }
 
 .btn:hover {
@@ -212,5 +245,108 @@
 
     100% {
         box-shadow: 0 0 25px rgba(15, 107, 61, 0);
+    }
+}
+
+/* ✅ MOBILE: wrap real + layout estable */
+@media (max-width: 575px) {
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    /* ✅ 2 columnas (mobile normal) */
+    .gridItem {
+        flex: 0 1 calc(50% - 12px);
+        max-width: calc(50% - 12px);
+        display: flex;
+    }
+
+    /* ✅ Pantallas MUY chicas: 1 columna (evita desbordes) */
+    @media (max-width: 360px) {
+        .gridItem {
+            flex: 0 1 100%;
+            max-width: 100%;
+        }
+    }
+
+    .card {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 0.85rem;
+        border-radius: 14px;
+        box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.10);
+    }
+
+    .imageWrapper {
+        height: 120px;
+        margin-bottom: 0.7rem;
+        border-radius: 12px;
+    }
+
+    .name {
+        font-size: 1.02rem;
+        line-height: 1.2;
+        min-height: calc(1.2em * 2);
+        /* 2 líneas mínimo */
+    }
+
+    .priceKg,
+    .priceRow {
+        margin-bottom: 0.55rem;
+    }
+
+    /* ✅ Controles: NO se desbordan */
+    .gramControls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        margin-bottom: 0.6rem;
+        flex-wrap: wrap;
+        /* ✅ si no entra, baja a otra línea */
+    }
+
+    .gramBtn {
+        padding: 0.38rem 0.45rem;
+        font-size: 0.74rem;
+        border-radius: 10px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+    }
+
+    /* ✅ Input flexible para 2 columnas */
+    .input {
+        width: auto;
+        min-width: 64px;
+        max-width: 110px;
+        flex: 1 1 64px;
+        /* ✅ se adapta al espacio */
+        padding: 0.5rem;
+        font-size: 0.98rem;
+        border-radius: 12px;
+    }
+
+    .finalPrice {
+        font-size: 1.25rem;
+        margin-bottom: 0.55rem;
+        text-align: center;
+    }
+
+    .xgrams {
+        white-space: nowrap;
+        /* evita salto raro */
+    }
+
+    .btn {
+        padding: 0.65rem;
+        font-size: 0.92rem;
+        border-radius: 14px;
+        margin-top: auto;
+        /* botón abajo siempre */
     }
 }

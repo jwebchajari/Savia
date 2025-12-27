@@ -8,15 +8,27 @@ import { useCart } from "@/context/CartContext";
 import { getWeeklyOffers } from "@/services/productsService";
 
 const GENERIC_IMG = "/placeholder-product.png";
-const STEP = 50;
+
+/** KG */
+const GRAM_STEP = 50;
 const DEFAULT_G = 100;
+
+/** UNIDAD */
+const UNIT_STEP = 1;
+const DEFAULT_U = 1;
 
 export default function WeeklyOffers() {
   const { addToCart } = useCart();
 
   const [products, setProducts] = useState([]);
-  const [grams, setGrams] = useState({});
+  const [amountById, setAmountById] = useState({});
   const [loading, setLoading] = useState(true);
+
+  // ✅ detecta mobile
+  const isMobile =
+    typeof window !== "undefined" && window.matchMedia
+      ? window.matchMedia("(max-width: 575px)").matches
+      : false;
 
   /* ===============================
      💲 Formateador ARS robusto
@@ -42,43 +54,91 @@ export default function WeeklyOffers() {
     return moneyFmt.format(num);
   };
 
+  // ✅ Detecta kg/unidad aunque venga como "u" o "unidad"
+  const getTipoVenta = (item) => {
+    const t = (item?.tipoVenta ?? "kg").toString().toLowerCase();
+    return t === "u" || t === "unidad" ? "u" : "kg";
+  };
+
+  // ✅ Muestra "g" o "kg" según el total (solo para tipo kg)
+  const formatAmountLabel = (tipo, amount) => {
+    if (!amount || amount <= 0) return tipo === "u" ? "0u" : "0g";
+
+    if (tipo === "u") return `${amount}u`;
+
+    // tipo === "kg" => amount son gramos
+    if (amount < 1000) return `${amount}g`;
+
+    // >= 1000g => mostrar en kg
+    const kg = amount / 1000;
+
+    // si es exacto (1kg, 2kg, etc) no mostramos decimales
+    if (Number.isInteger(kg)) return `${kg}kg`;
+
+    // si no, hasta 2 decimales sin ceros finales (1.50 -> 1.5)
+    const str = kg.toFixed(2).replace(/\.?0+$/, "");
+    return `${str}kg`;
+  };
+
+  const parsePrecio = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const hasValidOffer = (precio, oferta) =>
+    Number.isFinite(oferta) && oferta > 0 && oferta < precio;
+
   useEffect(() => {
     const fetchOffers = async () => {
-      const data = await getWeeklyOffers();
-      setProducts(Array.isArray(data) ? data : []);
-      setLoading(false);
+      try {
+        const data = await getWeeklyOffers();
+        setProducts(Array.isArray(data) ? data : []);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchOffers();
   }, []);
 
-  const handleGramChange = (id, value) => {
-    let n = Number(value);
-    if (!Number.isFinite(n)) n = DEFAULT_G;
+  /** ===============================
+   *  Amount handlers (grams/units)
+   *  =============================== */
+  const setAmount = (id, raw, step, fallback, { snap } = { snap: true }) => {
+    let n = Number(raw);
+    if (!Number.isFinite(n)) n = fallback;
     n = Math.max(0, n);
-    n = Math.round(n / STEP) * STEP;
 
-    setGrams((prev) => ({ ...prev, [id]: n }));
+    if (snap) {
+      n = Math.round(n / step) * step;
+    }
+
+    setAmountById((prev) => ({ ...prev, [id]: n }));
   };
 
-  const adjustGrams = (id, change) => {
-    setGrams((prev) => {
-      const current = prev[id] ?? DEFAULT_G;
-      return { ...prev, [id]: Math.max(0, current + change) };
+  const adjustAmount = (id, delta, fallback) => {
+    setAmountById((prev) => {
+      const current = prev[id] ?? fallback;
+      return { ...prev, [id]: Math.max(0, current + delta) };
     });
   };
 
-  const getFinalPrice = (item, g) => {
-    if (!g || g <= 0) return 0;
+  /** ===============================
+   *  Price calc
+   *  =============================== */
+  const getFinalPrice = (item, amount) => {
+    if (!amount || amount <= 0) return 0;
 
-    const precio = Number(item?.precio) || 0;
+    const precio = parsePrecio(item?.precio);
     const oferta =
-      item?.precioOferta != null ? Number(item.precioOferta) : null;
+      item?.precioOferta != null ? parsePrecio(item.precioOferta) : null;
 
-    const hasOffer =
-      Number.isFinite(oferta) && oferta > 0 && oferta < precio;
+    const useOffer = hasValidOffer(precio, oferta);
+    const base = useOffer ? oferta : precio;
 
-    const precioKg = hasOffer ? oferta : precio;
-    return Math.round((precioKg / 1000) * g);
+    const tipo = getTipoVenta(item);
+
+    if (tipo === "u") return Math.round(base * amount);
+    return Math.round((base / 1000) * amount);
   };
 
   if (loading || products.length === 0) return null;
@@ -89,22 +149,27 @@ export default function WeeklyOffers() {
 
       <Swiper spaceBetween={16} slidesPerView="auto" className={styles.swiper}>
         {products.map((item) => {
-          const g = grams[item.id] ?? DEFAULT_G;
+          const tipo = getTipoVenta(item);
 
-          const precio = Number(item?.precio) || 0;
+          const precio = parsePrecio(item?.precio);
           const oferta =
-            item?.precioOferta != null ? Number(item.precioOferta) : null;
+            item?.precioOferta != null ? parsePrecio(item.precioOferta) : null;
 
-          const hasOffer =
-            Number.isFinite(oferta) && oferta > 0 && oferta < precio;
+          const hasOffer = hasValidOffer(precio, oferta);
 
-          const finalPrice = getFinalPrice(item, g);
+          const amount =
+            amountById[item.id] ?? (tipo === "u" ? DEFAULT_U : DEFAULT_G);
+
+          const finalPrice = getFinalPrice(item, amount);
 
           const discount = hasOffer
             ? Math.round(((precio - oferta) / precio) * 100)
             : 0;
 
-          const disabled = g === 0 || finalPrice === 0;
+          const disabled = amount === 0 || finalPrice === 0;
+
+          const unitLabel = tipo === "u" ? "/ unidad" : "/ Kg";
+          const amountLabel = formatAmountLabel(tipo, amount);
 
           return (
             <SwiperSlide key={item.id} className={styles.slide}>
@@ -113,83 +178,136 @@ export default function WeeklyOffers() {
                   <span className={styles.badge}>-{discount}%</span>
                 )}
 
-                {/* Imagen (todas iguales, cover) */}
                 <div className={styles.imageWrapper}>
                   <img
                     src={item.imagen || GENERIC_IMG}
                     alt={item.nombre}
                     className={styles.productImg}
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = GENERIC_IMG;
+                    }}
                   />
                 </div>
 
                 <h3 className={styles.name}>{item.nombre}</h3>
 
-                {/* Precio anterior + actual */}
                 {hasOffer ? (
                   <div className={styles.priceRow}>
                     <span className={styles.oldPrice}>
                       {formatMoney(precio)}
+                      {tipo === "u" ? "" : " / Kg"}
                     </span>
                     <span className={styles.nowPrice}>
-                      {formatMoney(oferta)} / Kg
+                      {formatMoney(oferta)} {unitLabel}
                     </span>
                   </div>
                 ) : (
                   <p className={styles.priceKg}>
-                    {formatMoney(precio)} / Kg
+                    {formatMoney(precio)} {unitLabel}
                   </p>
                 )}
 
-                {/* Gramos */}
-                <div className={styles.gramControls}>
-                  <button
-                    className={styles.gramBtn}
-                    onClick={() => adjustGrams(item.id, -50)}
-                    type="button"
-                  >
-                    -50g
-                  </button>
+                {/* Controles según tipo */}
+                {tipo === "u" ? (
+                  <div className={styles.gramControls}>
+                    <button
+                      className={styles.gramBtn}
+                      onClick={() => adjustAmount(item.id, -UNIT_STEP, DEFAULT_U)}
+                      type="button"
+                      aria-label="Restar 1 unidad"
+                    >
+                      -1
+                    </button>
 
-                  <input
-                    type="number"
-                    step={STEP}
-                    className={styles.input}
-                    value={g}
-                    onChange={(e) =>
-                      handleGramChange(item.id, e.target.value)
-                    }
-                  />
+                    <input
+                      type="number"
+                      step={UNIT_STEP}
+                      min="0"
+                      inputMode="numeric"
+                      className={styles.input}
+                      value={amount}
+                      onChange={(e) =>
+                        setAmount(item.id, e.target.value, UNIT_STEP, DEFAULT_U, {
+                          snap: true,
+                        })
+                      }
+                      aria-label="Cantidad de unidades"
+                    />
 
-                  <button
-                    className={styles.gramBtn}
-                    onClick={() => adjustGrams(item.id, +50)}
-                    type="button"
-                  >
-                    +50g
-                  </button>
-                </div>
+                    <button
+                      className={styles.gramBtn}
+                      onClick={() => adjustAmount(item.id, +UNIT_STEP, DEFAULT_U)}
+                      type="button"
+                      aria-label="Sumar 1 unidad"
+                    >
+                      +1
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.gramControls}>
+                    <button
+                      className={styles.gramBtn}
+                      onClick={() => adjustAmount(item.id, -GRAM_STEP, DEFAULT_G)}
+                      type="button"
+                      aria-label="Restar 50 gramos"
+                    >
+                      -50g
+                    </button>
 
-                {/* Precio final */}
+                    <input
+                      type="number"
+                      step={GRAM_STEP}
+                      min="0"
+                      inputMode="numeric"
+                      className={styles.input}
+                      value={amount}
+                      onChange={(e) =>
+                        setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
+                          snap: false,
+                        })
+                      }
+                      onBlur={(e) =>
+                        setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
+                          snap: !isMobile,
+                        })
+                      }
+                      aria-label="Cantidad en gramos"
+                    />
+
+                    <button
+                      className={styles.gramBtn}
+                      onClick={() => adjustAmount(item.id, +GRAM_STEP, DEFAULT_G)}
+                      type="button"
+                      aria-label="Sumar 50 gramos"
+                    >
+                      +50g
+                    </button>
+                  </div>
+                )}
+
+                {/* ✅ Total final: si pasa 1000g muestra kg */}
                 <div className={styles.finalPrice}>
                   {formatMoney(finalPrice)}
-                  <span className={styles.xgrams}> / {g}g</span>
+                  <span className={styles.xgrams}>
+                    {" "}
+                    {tipo === "u" ? ` total (${amountLabel})` : ` / ${amountLabel}`}
+                  </span>
                 </div>
 
                 <button
-                  className={`${styles.btn} ${
-                    disabled ? styles.btnDisabled : ""
-                  }`}
+                  className={`${styles.btn} ${disabled ? styles.btnDisabled : ""}`}
                   disabled={disabled}
                   onClick={() =>
                     addToCart({
-                      name: `${item.nombre} (${g}g)`,
-                      slug: `${item.id}-${g}`,
+                      name: `${item.nombre} (${amountLabel})`,
+                      slug: `${item.id}-${amountLabel}`,
                       price: finalPrice,
                       quantity: 1,
-                      image: item.imagen,
+                      image: item.imagen || GENERIC_IMG,
                     })
                   }
+                  type="button"
                 >
                   Agregar al carrito
                 </button>

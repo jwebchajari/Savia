@@ -5,19 +5,23 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import NavbarRoot from "@/_components/Navbar/NavbarRoot";
 import SuccessModal from "@/_components/Modals/SuccessModal";
-
 import { getProductById, updateProduct } from "@/services/productsService";
-
 import styles from "./page.module.css";
 
 // Generar slug sin espacios ni tildes
 function slugify(str) {
-    return str
+    return (str || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "");
+}
+
+// ---- normalizar tipoVenta ----
+function normalizeTipoVenta(value) {
+    const raw = (value ?? "kg").toString().toLowerCase();
+    return raw === "u" || raw === "unidad" ? "u" : "kg";
 }
 
 const CATEGORIES = [
@@ -61,31 +65,40 @@ export default function EditarProductoPage() {
     // Cargar producto actual
     useEffect(() => {
         const load = async () => {
+            setLoadingProduct(true);
+            setError("");
+
             const data = await getProductById(id);
 
             if (!data) {
                 setError("Producto no encontrado");
+                setLoadingProduct(false);
                 return;
             }
 
+            const categoriaNombre = data.categoriaNombre || data.categoria || "";
+            const categoriaSlug = data.categoriaSlug || slugify(categoriaNombre);
+
+            const tipoVenta = normalizeTipoVenta(data.tipoVenta);
+
             setForm({
-                nombre: data.nombre,
+                nombre: data.nombre || "",
                 descripcion: data.descripcion || "",
-                categoriaNombre: data.categoriaNombre || data.categoria || "",
-                categoriaSlug: data.categoriaSlug || slugify(data.categoria || ""),
-                precio: data.precio,
+                categoriaNombre,
+                categoriaSlug,
+                precio: data.precio ?? "",
                 precioOferta: data.precioOferta ?? "",
                 imagen: data.imagen || "",
-                disponible: data.disponible,
-                tipoVenta: data.tipoVenta ?? "kg",
-                ofertaGeneral: data.ofertaGeneral || false,
-                ofertaSemana: data.ofertaSemana || false,
+                disponible: typeof data.disponible === "boolean" ? data.disponible : true,
+                tipoVenta,
+                ofertaGeneral: !!data.ofertaGeneral,
+                ofertaSemana: !!data.ofertaSemana,
             });
 
             setLoadingProduct(false);
         };
 
-        load();
+        if (id) load();
     }, [id]);
 
     const update = (key, value) => {
@@ -110,20 +123,41 @@ export default function EditarProductoPage() {
                 return;
             }
 
-            setSaving(true);
+            const categoriaNombre = form.categoriaNombre;
+            const categoriaSlug = form.categoriaSlug || slugify(categoriaNombre);
 
-            await updateProduct(id, form);
+            const tipoVenta = normalizeTipoVenta(form.tipoVenta);
+
+            const payload = {
+                ...form,
+                categoriaNombre,
+                categoriaSlug,
+                tipoVenta, // ✅ "kg" o "u"
+                precio: Number(form.precio),
+                precioOferta:
+                    form.precioOferta !== "" && form.precioOferta != null
+                        ? Number(form.precioOferta)
+                        : null,
+                disponible: !!form.disponible,
+                ofertaGeneral: !!form.ofertaGeneral,
+                ofertaSemana: !!form.ofertaSemana,
+            };
+
+            setSaving(true);
+            await updateProduct(id, payload);
 
             setShowSuccess(true);
-
         } catch (err) {
             console.error(err);
-            setError(err.message);
-            setSaving(false);
+            setError(err?.message || "Ocurrió un error al guardar.");
+        } finally {
+            setSaving(false); // ✅ SIEMPRE vuelve
         }
     };
 
     if (loadingProduct || !form) return null;
+
+    const imageUrl = typeof form.imagen === "string" ? form.imagen.trim() : "";
 
     return (
         <>
@@ -153,7 +187,7 @@ export default function EditarProductoPage() {
                             rows={3}
                             value={form.descripcion}
                             onChange={(e) => update("descripcion", e.target.value)}
-                        ></textarea>
+                        />
                     </div>
 
                     {/* Categoría */}
@@ -171,7 +205,9 @@ export default function EditarProductoPage() {
                         >
                             <option value="">Seleccionar...</option>
                             {CATEGORIES.map((c) => (
-                                <option key={c} value={c}>{c}</option>
+                                <option key={c} value={c}>
+                                    {c}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -182,7 +218,8 @@ export default function EditarProductoPage() {
                         <select
                             className="form-select"
                             value={form.tipoVenta}
-                            onChange={(e) => update("tipoVenta", e.target.value)}
+                            onChange={(e) => update("tipoVenta", normalizeTipoVenta(e.target.value))}
+                            required
                         >
                             {TIPO_VENTA.map((t) => (
                                 <option key={t.value} value={t.value}>
@@ -229,9 +266,16 @@ export default function EditarProductoPage() {
                     </div>
 
                     {/* Vista previa */}
-                    {form.imagen && (
+                    {imageUrl && (
                         <div className="text-center mb-4">
-                            <img src={form.imagen} alt="" style={{ maxWidth: 180, borderRadius: 12 }} />
+                            <img
+                                src={imageUrl}
+                                alt=""
+                                style={{ maxWidth: 180, borderRadius: 12 }}
+                                onError={(e) => {
+                                    e.currentTarget.style.display = "none";
+                                }}
+                            />
                         </div>
                     )}
 
@@ -242,21 +286,27 @@ export default function EditarProductoPage() {
                         <div className={styles.cardGroup}>
                             <div
                                 onClick={() => update("disponible", !form.disponible)}
-                                className={`${styles.cardToggle} ${form.disponible ? styles.cardGreen : ""}`}
+                                className={`${styles.cardToggle} ${form.disponible ? styles.cardGreen : ""
+                                    }`}
+                                role="button"
                             >
                                 <span>Disponible</span>
                             </div>
 
                             <div
                                 onClick={() => update("ofertaGeneral", !form.ofertaGeneral)}
-                                className={`${styles.cardToggle} ${form.ofertaGeneral ? styles.cardOrange : ""}`}
+                                className={`${styles.cardToggle} ${form.ofertaGeneral ? styles.cardOrange : ""
+                                    }`}
+                                role="button"
                             >
                                 <span>Oferta General</span>
                             </div>
 
                             <div
                                 onClick={() => update("ofertaSemana", !form.ofertaSemana)}
-                                className={`${styles.cardToggle} ${form.ofertaSemana ? styles.cardBlue : ""}`}
+                                className={`${styles.cardToggle} ${form.ofertaSemana ? styles.cardBlue : ""
+                                    }`}
+                                role="button"
                             >
                                 <span>Oferta Semana</span>
                             </div>
@@ -265,7 +315,11 @@ export default function EditarProductoPage() {
 
                     {error && <div className="alert alert-danger mt-3">{error}</div>}
 
-                    <button type="submit" className="btn btn-savia px-4 py-2 mt-4" disabled={saving}>
+                    <button
+                        type="submit"
+                        className="btn btn-savia px-4 py-2 mt-4"
+                        disabled={saving}
+                    >
                         {saving ? "Guardando..." : "Guardar cambios"}
                     </button>
                 </form>

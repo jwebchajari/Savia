@@ -12,7 +12,7 @@ export default async function CategoriaPage({ params }) {
             <Navbar />
             <Banner />
             <CategoryProducts slug={id} />
-            <RecommendedProducts limit={10} title="Te puede interesar" />
+            <RecommendedProducts limit={20} title="Te puede interesar" />
             <Footer/>
         </>
     );
