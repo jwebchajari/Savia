@@ -146,3 +146,79 @@
 .btnDisabled:hover {
     background: #c5c5c5 !important;
 }
+
+/* ✅ Imagenes: siempre mismo tamaño, sin deformarse */
+.imageWrapper {
+    width: 100%;
+    height: 160px;
+    /* mismo alto para todas */
+    border-radius: 12px;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 1rem;
+    background: #f4f4f4;
+    /* fallback elegante mientras carga */
+}
+
+.productImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* recorta y mantiene proporción */
+    object-position: center;
+    /* centra recorte */
+    display: block;
+}
+
+/* ✅ Título: mínimo 2 líneas para igualar alturas */
+.name {
+    font-family: "Gotham", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    text-align: center;
+
+    /* clamp a 2 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    line-height: 1.25;
+    min-height: calc(1.25em * 2);
+    /* reserva 2 líneas aunque sea corto */
+}
+
+/* =========================================
+   ✅ OFERTA: tachado + precio rojo destacado
+   (usalo cuando exista precioOferta)
+========================================= */
+.priceRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    /* por si no entra en mobile */
+}
+
+.oldPrice {
+    text-decoration: line-through;
+    opacity: 0.55;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.nowPrice {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #c92a2a;
+    /* rojo oferta */
+    background: rgba(201, 42, 42, 0.10);
+    border: 1px solid rgba(201, 42, 42, 0.25);
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    line-height: 1;
+}

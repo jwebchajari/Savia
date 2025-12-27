@@ -4,7 +4,7 @@ import Allcategories from "@/_components/CategorySection/Allcategories";
 import ContactSection from "@/_components/ContactSection/ContactSection";
 import Footer from "@/_components/Footer/Footer";
 import Navbar from "@/_components/Navbar/Navbar";
-import WeeklyOffers from "@/_components/Offers/WeeklyOffers";
+import WeeklyOffers from "../_components/Offers/WeeklyOffers";
 
 export default function Home() {
   return (

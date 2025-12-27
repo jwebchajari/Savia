@@ -6,20 +6,22 @@ export default function CategorySection({
     title,
     description,
     img,
-    link
+    link,
 }) {
     return (
         <section className={`container ${styles.section}`}>
 
-            <div className={styles.imageWrapper}>
+            {/* ✅ Imagen clickeable */}
+            <Link href={link} className={styles.imageWrapper}>
                 <Image
                     src={img}
                     alt={title}
                     fill
                     className={styles.image}
                     unoptimized
+                    priority={false}
                 />
-            </div>
+            </Link>
 
             <div className={styles.textBox}>
                 <h2>{title}</h2>

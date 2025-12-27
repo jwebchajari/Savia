@@ -8,22 +8,19 @@
     text-align: center;
 }
 
-/* ✅ Grid flex con items estirables (cards mismas alturas por fila) */
+/* ✅ Grid flex con items estirables */
 .grid {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     justify-content: center;
     align-items: stretch;
-    /* ✅ estira items para igual altura */
 }
 
-/* Base */
 .gridItem {
     flex: 0 1 100%;
     max-width: 100%;
     display: flex;
-    /* ✅ permite que .card haga height:100% */
 }
 
 /* 2 columnas */
@@ -62,11 +59,8 @@
     flex-direction: column;
     align-items: center;
 
-    min-height: 380px;
     height: 100%;
-    /* ✅ igual altura */
     width: 100%;
-
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
 }
 
@@ -92,6 +86,7 @@
 .imageWrapper {
     width: 100%;
     height: 160px;
+    /* ✅ todas iguales */
     border-radius: 12px;
     overflow: hidden;
     display: block;
@@ -103,10 +98,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* ✅ cover */
+    object-position: center;
     display: block;
 }
 
-/*************** TEXT ***************/
+/*************** TITLE ***************/
 .name {
     font-family: "Gotham", sans-serif;
     font-size: 1.15rem;
@@ -114,71 +111,56 @@
     margin-bottom: 0.3rem;
     text-align: center;
 
-    /* clamp 2 líneas + reserva mínima 2 líneas */
+    /* ✅ 2 líneas mínimo */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-
     line-height: 1.25;
     min-height: calc(1.25em * 2);
-    /* ✅ mínimo 2 líneas */
 }
 
+/*************** PRICE ***************/
 .priceKg {
     font-size: 0.9rem;
     opacity: 0.75;
     margin-bottom: 1rem;
 }
 
-/* si hay oferta */
+/* ✅ Oferta: igual que WeeklyOffers */
 .priceRow {
     display: flex;
-    gap: 10px;
     align-items: baseline;
     justify-content: center;
+    gap: 0.6rem;
     margin-bottom: 1rem;
 }
 
 .oldPrice {
-    text-decoration: line-through;
-    opacity: 0.7;
     font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0.6;
+    text-decoration: line-through;
 }
 
 .nowPrice {
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--savia-dark);
 }
 
-/*************** GRAM/UNIT CONTROLS ***************/
+/*************** INPUT CONTROLS ***************/
 .gramControls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
     margin-bottom: 1rem;
     flex: 0 0 auto;
-}
-
-.gramBtn {
-    background: var(--savia-main);
-    color: #fff;
-    border: none;
-    padding: 0.45rem 0.7rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-family: "Gotham", sans-serif;
-    transition: background 0.15s ease-out;
-    white-space: nowrap;
-}
-
-.gramBtn:hover {
-    background: #064c2c;
+    width: 100%;
 }
 
 .input {
-    width: 90px;
+    width: 110px;
     padding: 0.6rem;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -187,13 +169,14 @@
     font-family: "Gotham", sans-serif;
 }
 
-/*************** PRICE ***************/
+/*************** FINAL PRICE ***************/
 .finalPrice {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--savia-main);
     margin-bottom: 1rem;
     flex: 0 0 auto;
+    text-align: center;
 }
 
 .xgrams {
@@ -216,7 +199,7 @@
     transition: background 0.15s ease-out;
 
     margin-top: auto;
-    /* ✅ empuja el botón al fondo SIEMPRE */
+    /* ✅ botón alineado abajo */
 }
 
 .btn:hover {
@@ -232,6 +215,7 @@
     background: #c5c5c5 !important;
 }
 
+/*************** FOCUS ***************/
 .focused {
     outline: 3px solid var(--savia-main);
     outline-offset: 4px;
@@ -248,24 +232,17 @@
     }
 }
 
-/* ✅ MOBILE: wrap real + layout estable */
+/*************** MOBILE ***************/
 @media (max-width: 575px) {
     .grid {
-        display: flex;
-        flex-wrap: wrap;
         gap: 12px;
-        justify-content: center;
-        align-items: stretch;
     }
 
-    /* ✅ 2 columnas (mobile normal) */
     .gridItem {
         flex: 0 1 calc(50% - 12px);
         max-width: calc(50% - 12px);
-        display: flex;
     }
 
-    /* ✅ Pantallas MUY chicas: 1 columna (evita desbordes) */
     @media (max-width: 360px) {
         .gridItem {
             flex: 0 1 100%;
@@ -274,25 +251,19 @@
     }
 
     .card {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
         padding: 0.85rem;
         border-radius: 14px;
-        box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.10);
     }
 
     .imageWrapper {
         height: 120px;
         margin-bottom: 0.7rem;
-        border-radius: 12px;
     }
 
     .name {
         font-size: 1.02rem;
         line-height: 1.2;
         min-height: calc(1.2em * 2);
-        /* 2 líneas mínimo */
     }
 
     .priceKg,
@@ -300,32 +271,9 @@
         margin-bottom: 0.55rem;
     }
 
-    /* ✅ Controles: NO se desbordan */
-    .gramControls {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.35rem;
-        margin-bottom: 0.6rem;
-        flex-wrap: wrap;
-        /* ✅ si no entra, baja a otra línea */
-    }
-
-    .gramBtn {
-        padding: 0.38rem 0.45rem;
-        font-size: 0.74rem;
-        border-radius: 10px;
-        white-space: nowrap;
-        flex: 0 0 auto;
-    }
-
-    /* ✅ Input flexible para 2 columnas */
     .input {
-        width: auto;
-        min-width: 64px;
-        max-width: 110px;
-        flex: 1 1 64px;
-        /* ✅ se adapta al espacio */
+        width: 100%;
+        max-width: 120px;
         padding: 0.5rem;
         font-size: 0.98rem;
         border-radius: 12px;
@@ -334,19 +282,11 @@
     .finalPrice {
         font-size: 1.25rem;
         margin-bottom: 0.55rem;
-        text-align: center;
-    }
-
-    .xgrams {
-        white-space: nowrap;
-        /* evita salto raro */
     }
 
     .btn {
         padding: 0.65rem;
         font-size: 0.92rem;
         border-radius: 14px;
-        margin-top: auto;
-        /* botón abajo siempre */
     }
 }

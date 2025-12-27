@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { getProducts } from "@/services/productsService";
 import { useCart } from "@/context/CartContext";
 import styles from "./CategoryProducts.module.css";
+import Loading from "@/_components/Loading/Loading"; // ✅ correcto
 
 const GENERIC_IMG = "/placeholder-product.png";
 
@@ -25,11 +26,15 @@ export default function CategoryProducts({ slug }) {
     const [amountById, setAmountById] = useState({});
     const [loading, setLoading] = useState(true);
 
-    // ✅ detecta mobile (suficiente para tu caso)
-    const isMobile =
-        typeof window !== "undefined" && window.matchMedia
-            ? window.matchMedia("(max-width: 575px)").matches
-            : false;
+    const [isMobile, setIsMobile] = useState(false); // ✅ sin window en render
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 575px)");
+        const update = () => setIsMobile(mq.matches);
+        update();
+        mq.addEventListener?.("change", update);
+        return () => mq.removeEventListener?.("change", update);
+    }, []);
 
     const decodedSlug = useMemo(
         () => (slug ? decodeURIComponent(slug) : ""),
@@ -41,9 +46,6 @@ export default function CategoryProducts({ slug }) {
         [decodedSlug]
     );
 
-    /* ===============================
-       💲 Formateador ARS robusto
-       =============================== */
     const moneyFmt = useMemo(
         () =>
             new Intl.NumberFormat("es-AR", {
@@ -65,7 +67,6 @@ export default function CategoryProducts({ slug }) {
         return moneyFmt.format(num);
     };
 
-    // ✅ Detecta kg/unidad aunque venga como "u" o "unidad"
     const getTipoVenta = (item) => {
         const t = (item?.tipoVenta ?? "kg").toString().toLowerCase();
         return t === "u" || t === "unidad" ? "u" : "kg";
@@ -108,32 +109,16 @@ export default function CategoryProducts({ slug }) {
         };
     }, [decodedSlug]);
 
-    /** ===============================
-     *  Amount handlers (grams/units)
-     *  =============================== */
     const setAmount = (id, raw, step, fallback, { snap } = { snap: true }) => {
         let n = Number(raw);
         if (!Number.isFinite(n)) n = fallback;
         n = Math.max(0, n);
 
-        // ✅ snap = redondeo por step (para gramos). En mobile lo evitamos mientras escribe.
-        if (snap) {
-            n = Math.round(n / step) * step;
-        }
+        if (snap) n = Math.round(n / step) * step;
 
         setAmountById((prev) => ({ ...prev, [id]: n }));
     };
 
-    const adjustAmount = (id, delta, fallback) => {
-        setAmountById((prev) => {
-            const current = prev[id] ?? fallback;
-            return { ...prev, [id]: Math.max(0, current + delta) };
-        });
-    };
-
-    /** ===============================
-     *  Price calc (kg/unidad)
-     *  =============================== */
     const getFinalPrice = (item, amount) => {
         if (!amount || amount <= 0) return 0;
 
@@ -146,24 +131,19 @@ export default function CategoryProducts({ slug }) {
 
         const tipo = getTipoVenta(item);
 
-        // ✅ Por unidad: base es precio por unidad
         if (tipo === "u") return Math.round(base * amount);
-
-        // ✅ Por kg: base es precio por KG → convertir a gramos
         return Math.round((base / 1000) * amount);
     };
 
     if (!slug) return <p>Cargando...</p>;
-    if (loading) return <p>Cargando productos...</p>;
+    if (loading) return <Loading text="Cargando productos..." />;
 
     return (
         <section className="container mt-4 mb-4">
             <h2 className={styles.title}>{categoriaTexto}</h2>
 
             {productos.length === 0 ? (
-                <p className="text-muted text-center">
-                    No hay productos en esta categoría.
-                </p>
+                <p className="text-muted text-center">No hay productos en esta categoría.</p>
             ) : (
                 <div className={styles.grid}>
                     {productos.map((item) => {
@@ -197,10 +177,7 @@ export default function CategoryProducts({ slug }) {
                                 ref={(el) => {
                                     if (isFocused && el) {
                                         setTimeout(() => {
-                                            el.scrollIntoView({
-                                                behavior: "smooth",
-                                                block: "center",
-                                            });
+                                            el.scrollIntoView({ behavior: "smooth", block: "center" });
                                         }, 300);
                                     }
                                 }}
@@ -223,7 +200,6 @@ export default function CategoryProducts({ slug }) {
 
                                     <h3 className={styles.name}>{item.nombre}</h3>
 
-                                    {/* Precio base (con oferta si aplica) */}
                                     {hasOffer ? (
                                         <div className={styles.priceRow}>
                                             <span className={styles.oldPrice}>
@@ -240,11 +216,9 @@ export default function CategoryProducts({ slug }) {
                                         </p>
                                     )}
 
-                                    {/* Controles según tipo */}
+                                    {/* ✅ Controles: input libre (kg) / simple (u) */}
                                     {tipo === "u" ? (
                                         <div className={styles.gramControls}>
-
-
                                             <input
                                                 type="number"
                                                 min="0"
@@ -259,13 +233,9 @@ export default function CategoryProducts({ slug }) {
                                                 }
                                                 aria-label="Cantidad de unidades"
                                             />
-
-
                                         </div>
                                     ) : (
                                         <div className={styles.gramControls}>
-
-
                                             <input
                                                 type="number"
                                                 min="0"
@@ -274,26 +244,20 @@ export default function CategoryProducts({ slug }) {
                                                 className={styles.input}
                                                 value={amount}
                                                 onChange={(e) =>
-                                                    // ✅ deja escribir cualquier número (mobile y desktop)
                                                     setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
                                                         snap: false,
                                                     })
                                                 }
                                                 onBlur={(e) =>
-                                                    // ✅ en desktop vuelve a "snap" a múltiplos de 50 al salir
-                                                    // ✅ en mobile NO snapea (queda libre)
                                                     setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
                                                         snap: !isMobile,
                                                     })
                                                 }
                                                 aria-label="Cantidad en gramos"
                                             />
-
-
                                         </div>
                                     )}
 
-                                    {/* Total final */}
                                     <div className={styles.finalPrice}>
                                         {formatMoney(finalPrice)}
                                         <span className={styles.xgrams}>

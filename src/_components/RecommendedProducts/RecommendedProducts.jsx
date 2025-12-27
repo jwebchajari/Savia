@@ -36,15 +36,23 @@ export default function RecommendedProducts({
 }) {
     const { addToCart } = useCart();
 
+    const [mounted, setMounted] = useState(false); // ✅ anti-hydration para Swiper
+    const [isMobile, setIsMobile] = useState(false); // ✅ no usar window en render
+
     const [products, setProducts] = useState([]);
-    const [amountById, setAmountById] = useState({}); // ✅ gramos o unidades
+    const [amountById, setAmountById] = useState({});
     const [loading, setLoading] = useState(true);
 
-    // ✅ detecta mobile (para permitir "snap" solo en desktop)
-    const isMobile =
-        typeof window !== "undefined" && window.matchMedia
-            ? window.matchMedia("(max-width: 575px)").matches
-            : false;
+    useEffect(() => setMounted(true), []);
+
+    useEffect(() => {
+        // ✅ matchMedia solo en client
+        const mq = window.matchMedia("(max-width: 575px)");
+        const update = () => setIsMobile(mq.matches);
+        update();
+        mq.addEventListener?.("change", update);
+        return () => mq.removeEventListener?.("change", update);
+    }, []);
 
     /* ===============================
        💲 Formateador ARS robusto
@@ -70,7 +78,6 @@ export default function RecommendedProducts({
         return moneyFmt.format(num);
     };
 
-    // ✅ Detecta kg/unidad aunque venga como "u" o "unidad"
     const getTipoVenta = (item) => {
         const t = (item?.tipoVenta ?? "kg").toString().toLowerCase();
         return t === "u" || t === "unidad" ? "u" : "kg";
@@ -84,12 +91,11 @@ export default function RecommendedProducts({
     const hasValidOffer = (precio, oferta) =>
         Number.isFinite(oferta) && oferta > 0 && oferta < precio;
 
-    // ✅ Label de cantidad: 150g | 1.25kg | 2u
+    // ✅ Label: 150g | 1.25kg | 2u
     const formatAmountLabel = (tipo, amount) => {
         if (!amount || amount <= 0) return tipo === "u" ? "0u" : "0g";
         if (tipo === "u") return `${amount}u`;
 
-        // gramos
         if (amount < 1000) return `${amount}g`;
 
         const kg = amount / 1000;
@@ -105,9 +111,7 @@ export default function RecommendedProducts({
                 setLoading(true);
                 const all = await getProducts();
 
-                // ✅ Opcional: solo disponibles
                 const disponibles = all.filter((p) => p.disponible);
-
                 const random = shuffleArray(disponibles).slice(0, limit);
 
                 if (!alive) return;
@@ -128,9 +132,6 @@ export default function RecommendedProducts({
         };
     }, [limit]);
 
-    /** ===============================
-     *  Amount handlers (grams/units)
-     *  =============================== */
     const setAmount = (id, raw, step, fallback, { snap } = { snap: true }) => {
         let n = Number(raw);
         if (!Number.isFinite(n)) n = fallback;
@@ -148,9 +149,6 @@ export default function RecommendedProducts({
         });
     };
 
-    /** ===============================
-     *  Price calc (kg/unidad)
-     *  =============================== */
     const getFinalPrice = (item, amount) => {
         if (!amount || amount <= 0) return 0;
 
@@ -163,15 +161,13 @@ export default function RecommendedProducts({
 
         const tipo = getTipoVenta(item);
 
-        // ✅ Por unidad: base es precio por unidad
         if (tipo === "u") return Math.round(base * amount);
-
-        // ✅ Por kg: base es precio por KG → convertir a gramos
         return Math.round((base / 1000) * amount);
     };
 
-    if (loading) return null;
-    if (products.length === 0) return null;
+    // ✅ importante: Swiper SOLO cuando montó (evita hydration mismatch)
+    if (!mounted) return null;
+    if (loading || products.length === 0) return null;
 
     return (
         <section className="container mt-4 mb-4">
@@ -201,9 +197,6 @@ export default function RecommendedProducts({
                     const unitLabel = tipo === "u" ? "/ unidad" : "/ Kg";
                     const amountLabel = formatAmountLabel(tipo, amount);
 
-                    // precio visible (tachado + actual)
-                    const showOld = hasOffer;
-
                     return (
                         <SwiperSlide key={item.id} className={styles.slide}>
                             <div className={styles.card}>
@@ -224,7 +217,7 @@ export default function RecommendedProducts({
 
                                 <h3 className={styles.name}>{item.nombre}</h3>
 
-                                {showOld ? (
+                                {hasOffer ? (
                                     <div className={styles.priceRow}>
                                         <span className={styles.oldPrice}>
                                             {formatMoney(precio)}
@@ -240,7 +233,6 @@ export default function RecommendedProducts({
                                     </p>
                                 )}
 
-                                {/* Controles según tipo */}
                                 {tipo === "u" ? (
                                     <div className={styles.gramControls}>
                                         <button
@@ -249,7 +241,6 @@ export default function RecommendedProducts({
                                             onClick={() =>
                                                 adjustAmount(item.id, -UNIT_STEP, DEFAULT_U)
                                             }
-                                            aria-label="Restar 1 unidad"
                                         >
                                             -1
                                         </button>
@@ -266,7 +257,6 @@ export default function RecommendedProducts({
                                                     snap: true,
                                                 })
                                             }
-                                            aria-label="Cantidad de unidades"
                                         />
 
                                         <button
@@ -275,7 +265,6 @@ export default function RecommendedProducts({
                                             onClick={() =>
                                                 adjustAmount(item.id, +UNIT_STEP, DEFAULT_U)
                                             }
-                                            aria-label="Sumar 1 unidad"
                                         >
                                             +1
                                         </button>
@@ -288,7 +277,6 @@ export default function RecommendedProducts({
                                             onClick={() =>
                                                 adjustAmount(item.id, -GRAM_STEP, DEFAULT_G)
                                             }
-                                            aria-label="Restar 50 gramos"
                                         >
                                             -50g
                                         </button>
@@ -301,18 +289,15 @@ export default function RecommendedProducts({
                                             className={styles.input}
                                             value={amount}
                                             onChange={(e) =>
-                                                // ✅ escribir libre mientras tipea (mobile y desktop)
                                                 setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
                                                     snap: false,
                                                 })
                                             }
                                             onBlur={(e) =>
-                                                // ✅ desktop: snap a múltiplos de 50; mobile: libre
                                                 setAmount(item.id, e.target.value, GRAM_STEP, DEFAULT_G, {
                                                     snap: !isMobile,
                                                 })
                                             }
-                                            aria-label="Cantidad en gramos"
                                         />
 
                                         <button
@@ -321,14 +306,12 @@ export default function RecommendedProducts({
                                             onClick={() =>
                                                 adjustAmount(item.id, +GRAM_STEP, DEFAULT_G)
                                             }
-                                            aria-label="Sumar 50 gramos"
                                         >
                                             +50g
                                         </button>
                                     </div>
                                 )}
 
-                                {/* Total final */}
                                 <div className={styles.finalPrice}>
                                     {formatMoney(finalPrice)}
                                     <span className={styles.xgrams}>
